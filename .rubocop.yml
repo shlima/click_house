@@ -1,0 +1,123 @@
+require:
+  - rubocop-performance
+
+AllCops:
+  AutoCorrect: false
+  Exclude:
+    - 'click_house.gemspec'
+    - 'bin/*'
+  TargetRubyVersion: 2.6.5
+
+Bundler/OrderedGems:
+  Enabled: false
+
+# ============================== Documentation ======================
+Style/Documentation:
+  Enabled: false
+
+# ============================== Metrics ============================
+Metrics/ClassLength:
+  Max: 180
+Metrics/BlockLength:
+  Enabled: true
+Metrics/MethodLength:
+  Max: 25
+Metrics/LineLength:
+  Max: 140
+Metrics/AbcSize:
+  Max: 40
+
+# ============================== Naming =============================
+Naming/PredicateName:
+  NamePrefixBlacklist:
+    - is_
+Naming/FileName:
+  Enabled: true
+  Exclude:
+    - 'Gemfile'
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
+Naming/AccessorMethodName:
+  Enabled: false
+
+# ============================== Layout =============================
+Layout/AlignHash:
+  EnforcedHashRocketStyle: key
+  EnforcedColonStyle: key
+Layout/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+Layout/CaseIndentation:
+  EnforcedStyle: case
+  IndentOneStep: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+Layout/SpaceBeforeBlockBraces:
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: space
+Layout/EmptyLines:
+  Enabled: true
+Layout/EmptyLineAfterMagicComment:
+  Enabled: false
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: true
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+Layout/IndentFirstHashElement:
+  EnforcedStyle: consistent
+Layout/IndentHeredoc:
+  Enabled: false
+Layout/RescueEnsureAlignment:
+  Enabled: false
+
+# ============================== Style ==============================
+Style/RescueModifier:
+  Enabled: true
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: '[]'
+    '%i':    '[]'
+    '%w':    '[]'
+  Exclude:
+    - 'config/routes.rb'
+Style/StringLiterals:
+  Enabled: true
+Style/AsciiComments:
+  Enabled: false
+Style/Copyright:
+  Enabled: false
+Style/SafeNavigation:
+  Enabled: false
+Style/Lambda:
+  Enabled: false
+Style/Alias:
+  Enabled: true
+  EnforcedStyle: prefer_alias_method
+Style/ClassAndModuleChildren:
+  Enabled: true
+  EnforcedStyle: nested
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: no_comma
+Style/RescueStandardError:
+  Enabled: true
+  EnforcedStyle: explicit
+Style/InverseMethods:
+  AutoCorrect: false
+  Enabled: true
+Style/IfUnlessModifier:
+  Enabled: false
+Style/SpecialGlobalVars:
+  Enabled: false
+Style/BlockComments:
+  Enabled: false
+Style/GuardClause:
+  Enabled: false
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
+# ============================== Lint ==============================
+Lint/DuplicateMethods:
+  Enabled: false
+Lint/AmbiguousOperator:
+  Enabled: false
