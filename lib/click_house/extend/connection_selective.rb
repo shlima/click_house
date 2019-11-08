@@ -5,7 +5,18 @@ module ClickHouse
     module ConnectionSelective
       # @return [ResultSet]
       def select_all(sql)
-        Response::Factory[execute(Util::Statement.format(sql, 'JSON'))]
+        response = execute(Util::Statement.format(sql, 'JSON'))
+        Response::Factory[response]
+      end
+
+      def select_value(sql)
+        response = execute(Util::Statement.format(sql, 'JSON'))
+        Array(Response::Factory[response].first).dig(0, -1)
+      end
+
+      def select_one(sql)
+        response = execute(Util::Statement.format(sql, 'JSON'))
+        Response::Factory[response].first
       end
     end
   end
