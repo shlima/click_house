@@ -24,13 +24,18 @@ module ClickHouse
   autoload :Config, 'click_house/config'
   autoload :Connection, 'click_house/connection'
 
-  add_type 'Date', Type::DateType.new
+  %w[Date].each do |column|
+    add_type column, Type::DateType.new
+    add_type "Nullable(#{column})", Type::NullableType.new(Type::DateType.new)
+  end
 
   %w[UInt8 UInt16 UInt32 UInt64 Int8 Int16 Int32 Int64].each do |column|
     add_type column, Type::IntegerType.new
+    add_type "Nullable(#{column})", Type::NullableType.new(Type::IntegerType.new)
   end
 
   %w[Float32 Float64].each do |column|
     add_type column, Type::FloatType.new
+    add_type "Nullable(#{column})", Type::NullableType.new(Type::IntegerType.new)
   end
 end

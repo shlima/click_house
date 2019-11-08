@@ -8,7 +8,7 @@ module ClickHouse
       end
 
       def serialize(value)
-        value.to_f
+        value.to_f unless value.nil?
       end
     end
   end
