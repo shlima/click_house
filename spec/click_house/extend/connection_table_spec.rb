@@ -23,6 +23,26 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
     end
   end
 
+  describe '#table_exists?' do
+    context 'when not exists' do
+      it 'works' do
+        expect(subject.table_exists?('foo')).to eq(false)
+      end
+    end
+
+    context 'when exists' do
+      before do
+        subject.execute <<~SQL
+          CREATE TABLE rspec (date Date, id UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+        SQL
+      end
+
+      it 'works' do
+        expect(subject.table_exists?('rspec')).to eq(true)
+      end
+    end
+  end
+
   describe '#describe_table' do
     context 'when nested' do
       before do
