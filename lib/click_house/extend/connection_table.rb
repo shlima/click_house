@@ -37,6 +37,45 @@ module ClickHouse
 
         execute(format(sql, pattern)).success?
       end
+
+      # rubocop:disable Metrics/ParameterLists
+      def create_table(
+        name,
+        if_not_exists: false, cluster: nil,
+        partition: nil, order: nil, primary_key: nil, sample: nil, ttl: nil, settings: nil,
+        engine:,
+        &block
+      )
+        sql = <<~SQL
+          CREATE TABLE %<exists>s %<name>s %<cluster>s %<definition>s %<engine>s
+            %<partition>s
+            %<order>s
+            %<primary_key>s
+            %<sample>s
+            %<ttl>s
+            %<settings>s
+        SQL
+        definition = ClickHouse::Definition::ColumnSet.new(&block)
+
+        pattern = {
+          name: name,
+          exists: Util::Statement.ensure(if_not_exists, 'IF NOT EXISTS'),
+          definition: definition.to_s,
+          cluster: Util::Statement.ensure(cluster, "ON CLUSTER #{cluster}"),
+          partition: Util::Statement.ensure(partition, "PARTITION BY #{partition}"),
+          order: Util::Statement.ensure(order, "ORDER BY #{order}"),
+          primary_key: Util::Statement.ensure(primary_key, "PRIMARY KEY #{primary_key}"),
+          sample: Util::Statement.ensure(sample, "SAMPLE BY  #{sample}"),
+          ttl: Util::Statement.ensure(ttl, "TTL #{ttl}"),
+          settings: Util::Statement.ensure(settings, "SETTINGS #{settings}"),
+          engine: Util::Statement.ensure(engine, "ENGINE = #{engine}"),
+        }
+
+        puts format(sql, pattern)
+
+        execute(format(sql, pattern)).success?
+      end
+      # rubocop:enable Metrics/ParameterLists
     end
   end
 end

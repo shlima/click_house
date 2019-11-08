@@ -3,11 +3,11 @@
 module ClickHouse
   module Type
     class UndefinedType
-      def cast(value)
+      def cast(value, *)
         value
       end
 
-      def serialize(value)
+      def serialize(value, *)
         value
       end
     end

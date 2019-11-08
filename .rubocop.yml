@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - 'click_house.gemspec'
     - 'bin/*'
+    - 'spec/**/*'
   TargetRubyVersion: 2.6.5
 
 Bundler/OrderedGems:

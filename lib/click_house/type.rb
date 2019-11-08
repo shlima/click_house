@@ -6,8 +6,11 @@ module ClickHouse
     autoload :NullableType, 'click_house/type/nullable_type'
     autoload :UndefinedType, 'click_house/type/undefined_type'
     autoload :DateType, 'click_house/type/date_type'
+    autoload :DateTimeType, 'click_house/type/date_time_type'
     autoload :IntegerType, 'click_house/type/integer_type'
     autoload :FloatType, 'click_house/type/float_type'
     autoload :BooleanType, 'click_house/type/boolean_type'
+    autoload :DecimalType, 'click_house/type/decimal_type'
+    autoload :FixedStringType, 'click_house/type/fixed_string_type'
   end
 end

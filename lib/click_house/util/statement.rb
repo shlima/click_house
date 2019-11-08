@@ -3,6 +3,8 @@
 module ClickHouse
   module Util
     module Statement
+      END_OF_STATEMENT = ';'
+
       module_function
 
       def ensure(truthful, value, fallback = nil)
@@ -10,9 +12,9 @@ module ClickHouse
       end
 
       def format(sql, format)
-        return sql if sql =~ /FORMAT/i
+        return sql if sql.match?(/FORMAT/i)
 
-        "#{sql.sub(/;/, '')} FORMAT #{format};"
+        "#{sql.sub(/#{END_OF_STATEMENT}(\s+|\Z)/, '')} FORMAT #{format};"
       end
     end
   end

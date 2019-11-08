@@ -28,6 +28,7 @@ module ClickHouse
 
     def initialize(params = {})
       DEFAULTS.merge(params).each { |k, v| public_send("#{k}=", v) }
+      yield(self) if block_given?
     end
 
     def auth?

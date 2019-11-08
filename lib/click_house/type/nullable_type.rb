@@ -9,8 +9,8 @@ module ClickHouse
         @subtype = subtype
       end
 
-      def cast(value)
-        subtype.cast(value) unless value.nil?
+      def cast(*argv)
+        subtype.cast(*argv) unless argv.first.nil?
       end
 
       def serialize(value)

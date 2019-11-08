@@ -21,6 +21,7 @@ module ClickHouse
 
       private
 
+      # rubocop:disable Metrics/LineLength
       def on_complete(env)
         status = env.status
         method = env.method
@@ -35,6 +36,7 @@ module ClickHouse
         logger.info("\e[1m[36m#{rows}\e[0m")
         # logger.info("\n \e[1m[36m#{rows} #{"row".pluralize(rows)} in set. Elapsed: #{elapsed}. Processed: #{rows_read} rows, #{data_read} (#{rows_per_second} rows/s, #{data_per_second}/s)\e[0m")
       end
+      # rubocop:enable Metrics/LineLength
 
       def duration
         timestamp - starting
