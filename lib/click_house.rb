@@ -26,11 +26,11 @@ module ClickHouse
 
   add_type 'Date', Type::DateType.new
 
-  # %w[UInt8 UInt16 UInt32 UInt64 Int8 Int16 Int32 Int64].each do |column|
-  #   add_type column, Type::IntegerType.new
-  # end
-  #
-  # %w[Float32 Float64].each do |column|
-  #   add_type column, Type::FloatType.new
-  # end
+  %w[UInt8 UInt16 UInt32 UInt64 Int8 Int16 Int32 Int64].each do |column|
+    add_type column, Type::IntegerType.new
+  end
+
+  %w[Float32 Float64].each do |column|
+    add_type column, Type::FloatType.new
+  end
 end
