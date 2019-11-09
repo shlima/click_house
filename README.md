@@ -21,6 +21,7 @@ Despite we have full compatibility of protocol of different versions of client a
 ```ruby
 ClickHouse.config do |config|
   config.logger = Logger.new(STDOUT)
+  config.adapter = :net_http
   config.database = 'metrics'
   config.url = 'http://localhost:8123'
   config.timeout = 60

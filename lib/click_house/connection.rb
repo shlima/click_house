@@ -36,7 +36,7 @@ module ClickHouse
         conn.response Middleware::RaiseError
         conn.response :json, content_type: %r{application/json}
         conn.response Middleware::ParseCsv, content_type: %r{text/csv}
-        conn.adapter Faraday.default_adapter
+        conn.adapter config.adapter
       end
     end
 

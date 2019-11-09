@@ -7,6 +7,7 @@ module ClickHouse
     DEFAULT_PORT = '8123'
 
     DEFAULTS = {
+      adapter: Faraday.default_adapter,
       url: nil,
       scheme: 'http',
       host: 'localhost',
@@ -20,6 +21,7 @@ module ClickHouse
       ssl_verify: false
     }.freeze
 
+    attr_accessor :adapter
     attr_accessor :logger
     attr_accessor :scheme
     attr_accessor :host
