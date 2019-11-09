@@ -1,5 +1,21 @@
 ![](https://travis-ci.com/shlima/click_house.svg?branch=master)
 
+# ClickHouse Ruby driver
+
+A modern Ruby database driver for ClickHouse. [ClickHouse](https://clickhouse.yandex) 
+is a high-performance column-oriented database management system developed by 
+[Yandex](https://yandex.com/company) which operates Russia's most popular search engine.
+
+> This development was inspired by currently [unmaintainable alternative](https://github.com/archan937/clickhouse/edit/master/README.md)
+> but rewritten and well tested. Requires modern Ruby (>= 2.6) and Yandex ClickHouse
+
+### Why use the HTTP interface and not the TCP interface?
+
+Well, the developers of ClickHouse themselves [discourage](https://github.com/yandex/ClickHouse/issues/45#issuecomment-231194134) using the TCP interface.
+
+> TCP transport is more specific, we don't want to expose details.
+Despite we have full compatibility of protocol of different versions of client and server, we want to keep the ability to "break" it for very old clients. And that protocol is not too clean to make a specification.
+
 ## Configuration
 
 ```ruby
