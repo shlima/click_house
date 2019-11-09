@@ -270,6 +270,20 @@ end
 ClickHouse.add_type('DateTime(%s)', DateTimeType.new)
 ```
 
+## Using with a connection pool
+
+```ruby
+require 'connection_pool'
+
+ClickHouse.connection = ConnectionPool.new(size: 2) do
+  ClickHouse::Connection.new(ClickHouse::Config.new(url: 'http://replica.example.com'))
+end
+
+ClickHouse.connection.with do |conn|
+  conn.tables
+end
+```
+
 ## Development
 
 ```bash
