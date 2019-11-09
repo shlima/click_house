@@ -7,6 +7,7 @@ AllCops:
     - 'click_house.gemspec'
     - 'bin/*'
     - 'spec/**/*'
+    - 'vendor/**/*'
   TargetRubyVersion: 2.6.5
 
 Bundler/OrderedGems:

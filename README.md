@@ -1,4 +1,4 @@
-![](https://travis-ci.com/shlima/click_house.svg?branch=master)
+[![pipeline status](https://travis-ci.com/shlima/click_house.svg?branch=master)](https://travis-ci.com/shlima/click_house)
 
 # ClickHouse Ruby driver
 
@@ -30,7 +30,7 @@ ClickHouse.config do |config|
   # or provide connection options separately
   config.scheme = 'http' 
   config.host = 'localhost' 
-  config.host = 'port' 
+  config.port = 'port' 
   
   # if you use HTTP basic Auth
   config.username = 'user' 
@@ -247,7 +247,16 @@ end
 ClickHouse.add_type('Date', DateType.new)
 ```
 
-Actually `serialize` function is not used for now, but you may use it manually
+Actually `serialize` function is not used for now, but you may use it manually:
+
+```ruby
+time_type = DateTimeType.new
+string_type = FixedStringType.new 
+
+ClickHouse.connection.insert('table', columns: %i[name time]) do |buffer|
+  buffer << [string_type.serialize('a' * 1000, 20), time.serialize(Time.current, 'Europe/Moscow')]
+end 
+```
 
 If native type supports arguments, define type with `%s` argument:
 

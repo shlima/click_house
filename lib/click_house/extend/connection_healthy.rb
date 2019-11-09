@@ -4,7 +4,8 @@ module ClickHouse
   module Extend
     module ConnectionHealthy
       def ping
-        get(database: nil).success?
+        # without +send_progress_in_http_headers: nil+ DB::Exception: Empty query returns
+        get(database: nil, query: { send_progress_in_http_headers: nil }).success?
       end
 
       def replicas_status

@@ -7,7 +7,7 @@ module ClickHouse
 
       SUMMARY_HEADER = 'x-clickhouse-summary'
 
-      attr_reader :logger, :starting
+      attr_reader :logger, :starting, :body
 
       def initialize(app = nil, logger:)
         @logger = logger
@@ -16,25 +16,25 @@ module ClickHouse
 
       def call(environment)
         @starting = timestamp
+        @body = environment.body if log_body?
         @app.call(environment).on_complete(&method(:on_complete))
       end
 
       private
 
+      def log_body?
+        logger.level == Logger::DEBUG
+      end
+
       # rubocop:disable Metrics/LineLength
       def on_complete(env)
-        status = env.status
-        method = env.method
-        body = env.body
-        url = env.url
-        # summary = extract_summary(env.response_headers)
+        summary = extract_summary(env.response_headers)
         elapsed = duration
         query = CGI.parse(env.url.query.to_s).dig('query', 0) || '[NO QUERY]'
-        rows = 0
 
-        logger.info("\e[1m[35mSQL (#{elapsed})\e[0m #{query};")
-        logger.info("\e[1m[36m#{rows}\e[0m")
-        # logger.info("\n \e[1m[36m#{rows} #{"row".pluralize(rows)} in set. Elapsed: #{elapsed}. Processed: #{rows_read} rows, #{data_read} (#{rows_per_second} rows/s, #{data_per_second}/s)\e[0m")
+        logger.info("\e[1m[35mSQL (#{Util::Pretty.measure(elapsed)})\e[0m #{query};")
+        logger.debug(body) if body
+        logger.info("\e[1m[36mRead: #{summary.fetch(:read_rows)} rows, #{summary.fetch(:read_bytes)}. Written: #{summary.fetch(:written_rows)}, rows #{summary.fetch(:written_bytes)}\e[0m")
       end
       # rubocop:enable Metrics/LineLength
 
@@ -46,18 +46,16 @@ module ClickHouse
         Process.clock_gettime(Process::CLOCK_MONOTONIC)
       end
 
-      # def extract_summary(headers)
-      #   data = JSON.parse(headers['x-clickhouse-summary'])
-      #   result = {}
-      #
-      #   if (read_rows = data['read_rows'])
-      #     result[:read_rows] = read_rows
-      #   end
-      #
-      #   result
-      # rescue JSON::ParserError
-      #   {}
-      # end
+      def extract_summary(headers)
+        JSON.parse(headers.fetch('x-clickhouse-summary', '{}')).tap do |summary|
+          summary[:read_rows] = summary['read_rows']
+          summary[:read_bytes] = Util::Pretty.size(summary['read_bytes'].to_i)
+          summary[:written_rows] = summary['written_rows']
+          summary[:written_bytes] = Util::Pretty.size(summary['written_bytes'].to_i)
+        end
+      rescue JSON::ParserError
+        {}
+      end
     end
   end
 end

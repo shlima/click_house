@@ -18,9 +18,7 @@ module ClickHouse
       def on_complete(env)
         return if SUCCEED_STATUSES.include?(env.status)
 
-        raise DbException, <<~MSG
-          [#{env.status}] #{env.body}
-        MSG
+        raise DbException, "[#{env.status}] #{env.body}"
       end
     end
   end
