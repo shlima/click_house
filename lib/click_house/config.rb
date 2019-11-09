@@ -33,8 +33,12 @@ module ClickHouse
     attr_accessor :ssl_verify
 
     def initialize(params = {})
-      DEFAULTS.merge(params).each { |k, v| public_send("#{k}=", v) }
+      assign(DEFAULTS.merge(params))
       yield(self) if block_given?
+    end
+
+    def assign(params = {})
+      params.each { |k, v| public_send("#{k}=", v) }
     end
 
     def auth?
