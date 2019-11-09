@@ -31,6 +31,11 @@ module ClickHouse
     add_type "Nullable(#{column})", Type::NullableType.new(Type::DateType.new)
   end
 
+  %w[String].each do |column|
+    add_type column, Type::StringType.new
+    add_type "Nullable(#{column})", Type::NullableType.new(Type::StringType.new)
+  end
+
   ['DateTime(%s)'].each do |column|
     add_type column, Type::DateTimeType.new
     add_type "Nullable(#{column})", Type::NullableType.new(Type::DateTimeType.new)

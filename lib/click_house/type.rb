@@ -12,5 +12,7 @@ module ClickHouse
     autoload :BooleanType, 'click_house/type/boolean_type'
     autoload :DecimalType, 'click_house/type/decimal_type'
     autoload :FixedStringType, 'click_house/type/fixed_string_type'
+    autoload :ArrayType, 'click_house/type/array_type'
+    autoload :StringType, 'click_house/type/string_type'
   end
 end
