@@ -1,0 +1,12 @@
+language: ruby
+
+services:
+  - docker
+
+before_install:
+  - docker pull yandex/clickhouse-server
+  - docker run -d -p 127.0.0.1:8123:8123 yandex/clickhouse-server
+  - bundle install
+
+script:
+  - bundle exec rspec

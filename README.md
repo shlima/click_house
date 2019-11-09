@@ -1,3 +1,5 @@
+![](https://travis-ci.com/shlima/click_house.svg?branch=master)
+
 ## Configuration
 
 ```ruby
