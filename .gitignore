@@ -6,6 +6,7 @@
 /spec/reports/
 /log/*
 /tmp/*
+/*.gem
 
 !/log/.keep
 !/tmp/.keep
