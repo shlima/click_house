@@ -14,7 +14,10 @@ module ClickHouse
       logger: nil,
       database: nil,
       username: nil,
-      password: nil
+      password: nil,
+      timeout: nil,
+      open_timeout: nil,
+      ssl_verify: false
     }.freeze
 
     attr_accessor :logger
@@ -25,6 +28,9 @@ module ClickHouse
     attr_accessor :url
     attr_accessor :username
     attr_accessor :password
+    attr_accessor :timeout
+    attr_accessor :open_timeout
+    attr_accessor :ssl_verify
 
     def initialize(params = {})
       DEFAULTS.merge(params).each { |k, v| public_send("#{k}=", v) }

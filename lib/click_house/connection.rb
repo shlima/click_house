@@ -27,6 +27,9 @@ module ClickHouse
 
     def transport
       @transport ||= Faraday.new(config.url!) do |conn|
+        conn.options.timeout = config.timeout
+        conn.options.open_timeout = config.open_timeout
+        conn.ssl.verify = config.ssl_verify
         conn.basic_auth(config.username, config.password) if config.auth?
         conn.response Middleware::Logging, logger: config.logger!
         conn.response Middleware::RaiseError

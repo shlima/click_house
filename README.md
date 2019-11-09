@@ -23,6 +23,9 @@ ClickHouse.config do |config|
   config.logger = Logger.new(STDOUT)
   config.database = 'metrics'
   config.url = 'http://localhost:8123'
+  config.timeout = 60
+  config.open_timeout = 3
+  config.ssl_verify = false
   
   # or provide connection options separately
   config.scheme = 'http' 
