@@ -4,6 +4,10 @@
 
 [![pipeline status](https://travis-ci.com/shlima/click_house.svg?branch=master)](https://travis-ci.com/shlima/click_house)
 
+```bash
+gem install click_house
+```
+
 A modern Ruby database driver for ClickHouse. [ClickHouse](https://clickhouse.yandex) 
 is a high-performance column-oriented database management system developed by 
 [Yandex](https://yandex.com/company) which operates Russia's most popular search engine.
@@ -17,6 +21,17 @@ Well, the developers of ClickHouse themselves [discourage](https://github.com/ya
 
 > TCP transport is more specific, we don't want to expose details.
 Despite we have full compatibility of protocol of different versions of client and server, we want to keep the ability to "break" it for very old clients. And that protocol is not too clean to make a specification.
+
+# TOC
+
+* [Configuration](#configuration)
+* [Usage](#usage)
+* [Queries](#queries)
+* [Insert](#insert)
+* [Create a table](#create-a-table)
+* [Type casting](#type-casting)
+* [Using with a connection pool](#using-with-a-connection-pool)
+* [Using with Rails](#using-with-rails)
 
 ## Configuration
 
@@ -52,7 +67,7 @@ Now you are able to communicate with ClickHouse:
 ```ruby
 ClickHouse.connection.ping #=> true
 ```
-You can easily build a new raw connect 
+You can easily build a new raw connection
 
 ```ruby
 @connection = ClickHouse::Connection.new(ClickHouse::Config.new(logger: Rails.logger))
@@ -293,6 +308,101 @@ ClickHouse.connection.with do |conn|
   conn.tables
 end
 ```
+
+## Using with Rails
+
+```yml
+# config/click_house.yml
+
+default: &default
+  url: http://localhost:8123
+  timeout: 60
+  open_timeout: 3
+
+development:
+  database: ecliptic_development
+  <<: *default
+
+test:
+  database: ecliptic_test
+  <<: *default
+```
+
+```ruby
+# config/initializers/click_house.rb
+
+ClickHouse.config do |config|
+  config.logger = Rails.logger
+  config.assign(Rails.application.config_for('click_house'))
+end 
+```
+
+```ruby
+# lib/tasks/click_house.rake
+namespace :click_house do
+  task prepare: :environment do
+    @environments = Rails.env.development? ? %w[development test] : [Rails.env]
+  end
+
+  task drop: :prepare do
+    @environments.each do |env|
+      config = ClickHouse.config.clone.assign(Rails.application.config_for('click_house', env: env))
+      connection = ClickHouse::Connection.new(config)
+      connection.drop_database(config.database, if_exists: true)
+    end
+  end
+
+  task create: :prepare do
+    @environments.each do |env|
+      config = ClickHouse.config.clone.assign(Rails.application.config_for('click_house', env: env))
+      connection = ClickHouse::Connection.new(config)
+      connection.create_database(config.database, if_not_exists: true)
+    end
+  end
+end
+```
+
+Prepare the ClickHouse database:
+
+```bash
+rake click_house:drop click_house:create
+```
+
+If your are using SQL Database in Rails, you can manage ClickHouse migrations
+using `ActiveRecord::Migration` mechanism
+
+```ruby
+class CreateAdvertVisits < ActiveRecord::Migration[6.0]
+  def up
+    ClickHouse.connection.create_table('visits', engine: 'MergeTree(date, (account_id, advert_id), 512)') do |t|
+      t.UInt16   :account_id
+      t.UInt16   :user_id
+      t.Date     :date
+      t.DateTime :time, 'UTC'
+      t.UInt32   :ipv4
+      t.UInt64   :ipv6
+      t.UInt32   :device_type_id
+      t.UInt32   :os_family_id
+    end
+  end
+
+  def down    
+    ClickHouse.connection.drop_table('visits')
+  end
+end
+```
+
+if you use `ActiveRecord`, you can use the ORM query builder by using fake models
+
+````ruby
+# FAKE MODEL FOR ClickHouse 
+class Visit < ApplicationRecord
+  scope :with_os, -> { where.not(os_family_id: nil) }
+end
+
+scope = Visit.with_os.select('COUNT(*) as counter').group(:ipv4)
+ClickHouse.connection.select_all(scope.to_sql)
+```` 
 
 ## Development
 
