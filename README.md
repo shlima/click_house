@@ -40,6 +40,13 @@ ClickHouse.config do |config|
   config.password = 'password' 
 end
 ```
+
+Alternative, you can assign configuration parameters via a hash
+
+```ruby
+ClickHouse.config.assign(logger: Logger.new(STDOUT))
+```
+
 Now you are able to communicate with ClickHouse:
 
 ```ruby

@@ -39,8 +39,11 @@ module ClickHouse
       yield(self) if block_given?
     end
 
+    # @return [self]
     def assign(params = {})
       params.each { |k, v| public_send("#{k}=", v) }
+
+      self
     end
 
     def auth?

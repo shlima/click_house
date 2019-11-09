@@ -3,6 +3,10 @@ RSpec.describe ClickHouse::Config do
     it 'works' do
       expect { subject.assign(port: 33) }.to change { subject.port }.to(33)
     end
+
+    it 'returns self' do
+      expect(subject.assign({})).to be_a(described_class)
+    end
   end
 
   describe '#initialize' do
