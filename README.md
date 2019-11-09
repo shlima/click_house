@@ -1,6 +1,8 @@
-[![pipeline status](https://travis-ci.com/shlima/click_house.svg?branch=master)](https://travis-ci.com/shlima/click_house)
+![](./doc/logo.svg?sanitize=true)
 
 # ClickHouse Ruby driver
+
+[![pipeline status](https://travis-ci.com/shlima/click_house.svg?branch=master)](https://travis-ci.com/shlima/click_house)
 
 A modern Ruby database driver for ClickHouse. [ClickHouse](https://clickhouse.yandex) 
 is a high-performance column-oriented database management system developed by 

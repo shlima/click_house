@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150px" height="170px" viewBox="0 0 15 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFE800" offset="0%"></stop>
+            <stop stop-color="#FFCC00" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#FFE800" stop-opacity="0.99" offset="0%"></stop>
+            <stop stop-color="#FFCC00" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <g transform="translate(3.000000, 5.000000)" id="Path">
+                <polygon fill="url(#linearGradient-1)" fill-rule="nonzero" points="0 0 2 0 2 12 0 12"></polygon>
+                <polygon fill="url(#linearGradient-2)" fill-rule="nonzero" points="3 0 5 0 5 12 3 12"></polygon>
+                <polygon fill="url(#linearGradient-1)" fill-rule="nonzero" points="6 0 8 0 8 12 6 12"></polygon>
+            </g>
+            <g id="68747470733a2f2f63646e2e7261776769742e636f6d2f636c61726976652f636c612d727562792d706c7567696e2f6d61737465722f7075626c69632f69636f6e2f727562792e7376673f73616e6974697a653d74727565">
+                <g id="Group-2" fill-rule="nonzero">
+                    <polygon id="Path" fill="#CE0000" points="4.5 3.2 9.8 3.2 7.1 11.2"></polygon>
+                    <polygon id="Path" fill="#7C0000" points="9.7 3.2 14.1 3.2 7.1 11.1"></polygon>
+                    <polygon id="Path" fill="#F87274" points="4.5 3.2 0.1 3.2 7.1 11.1"></polygon>
+                    <polygon id="Path" fill="#F87274" points="2.4 0.1 4.5 3.3 7.1 0.1"></polygon>
+                    <polygon id="Path" fill="#FB191D" points="7.1 0.1 9.7 3.3 11.7 0.1"></polygon>
+                    <polygon id="Path" fill="#CC0001" points="9.7 3.2 11.7 4.4408921e-16 14.2 3.2"></polygon>
+                    <polygon id="Path" fill="#FB191D" points="-8.8817842e-16 3.2 2.4 4.4408921e-16 4.6 3.2"></polygon>
+                    <polygon id="Path" fill="#900000" points="4.5 3.2 7.1 4.4408921e-16 9.8 3.2"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
