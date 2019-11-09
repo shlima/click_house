@@ -21,6 +21,10 @@ module ClickHouse
       def measure(ms)
         "#{ms.round}MS"
       end
+
+      def squish(string)
+        string.gsub(/[[:space:]]+/, ' ').strip
+      end
     end
   end
 end
