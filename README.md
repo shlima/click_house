@@ -137,6 +137,18 @@ SQL
 response.body #=> "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000" 
 ```
 
+## Insert
+
+```ruby
+ClickHouse.connection.insert('table', columns: %i[id name]) do |buffer|
+  buffer << [1, 'Mercury']
+  buffer << [2, 'Venus']
+end 
+
+ClickHouse.connection.insert('table', columns: %i[id name], values: [[1, 'Mercury'], [2, 'Venus']])
+#=> true
+```
+
 ## Create a table
 ### Create table using DSL
 

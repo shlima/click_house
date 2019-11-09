@@ -6,6 +6,7 @@ module ClickHouse
     include Extend::ConnectionDatabase
     include Extend::ConnectionTable
     include Extend::ConnectionSelective
+    include Extend::ConnectionInserting
 
     attr_reader :config
 
