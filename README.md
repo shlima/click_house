@@ -6,7 +6,7 @@ A modern Ruby database driver for ClickHouse. [ClickHouse](https://clickhouse.ya
 is a high-performance column-oriented database management system developed by 
 [Yandex](https://yandex.com/company) which operates Russia's most popular search engine.
 
-> This development was inspired by currently [unmaintainable alternative](https://github.com/archan937/clickhouse/edit/master/README.md)
+> This development was inspired by currently [unmaintainable alternative](https://github.com/archan937/clickhouse)
 > but rewritten and well tested. Requires modern Ruby (>= 2.6) and Yandex ClickHouse
 
 ### Why use the HTTP interface and not the TCP interface?
@@ -42,7 +42,7 @@ Now you are able to communicate with ClickHouse:
 ```ruby
 ClickHouse.connection.ping #=> true
 ```
-You can build a new new raw connect easily
+You can easily build a new raw connect 
 
 ```ruby
 @connection = ClickHouse::Connection.new(ClickHouse::Config.new(logger: Rails.logger))
@@ -69,7 +69,7 @@ ClickHouse.connection.create_table(*) # see <Create a table> section
 ## Queries
 ### Select All
 
-Select all returns type-casted result set
+Select all type-casted result set
 
 ```ruby
 @result = ClickHouse.connection.select_all('SELECT * FROM visits')
@@ -85,7 +85,7 @@ Select all returns type-casted result set
 
 ### Select Value
 
-Select value returns exactly one typecast value
+Select value returns exactly one type-casted value
 
 ```ruby
 ClickHouse.connection.select_value('SELECT COUNT(*) from visits') #=> 0
@@ -105,7 +105,7 @@ ClickHouse.connection.select_one('SELECT date, SUM(id) AS sum FROM visits GROUP 
 ### Execute Raw SQL
 
 By default, gem provides parser for `JSON` and `CSV` response formats. Type conversion
-available for this `JSON`.
+available for the `JSON`.
 
 ```ruby
 # format not specified
@@ -247,4 +247,12 @@ class DateTimeType
 end
 
 ClickHouse.add_type('DateTime(%s)', DateTimeType.new)
+```
+
+## Development
+
+```bash
+make dockerize
+rspec
+rubocop
 ```
