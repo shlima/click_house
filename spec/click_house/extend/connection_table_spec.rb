@@ -129,6 +129,29 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
     end
   end
 
+  describe '#truncate_tables' do
+    before do
+      subject.execute <<~SQL
+        CREATE TABLE rspec_1(id Int64) ENGINE TinyLog
+      SQL
+
+      subject.execute <<~SQL
+        CREATE TABLE rspec_2(id Int64) ENGINE TinyLog
+      SQL
+
+      subject.insert('rspec_1', columns: %i[id], values: [[1]])
+      subject.insert('rspec_2', columns: %i[id], values: [[1]])
+    end
+
+    it 'works' do
+      sql = <<~SQL
+        SELECT (SELECT COUNT(*) FROM rspec_1) + (SELECT COUNT(*) FROM rspec_2)
+      SQL
+
+      expect { subject.truncate_tables }.to change { subject.select_value(sql) }.from(2).to(0)
+    end
+  end
+
   describe '#rename_table' do
     before do
       subject.execute <<~SQL

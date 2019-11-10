@@ -87,6 +87,10 @@ module ClickHouse
         execute(format(sql, pattern)).success?
       end
 
+      def truncate_tables(names = tables, *argv)
+        Array(names).each { |name| truncate_table(name, *argv) }
+      end
+
       def rename_table(from, to, cluster: nil)
         from = Array(from)
         to = Array(to)
