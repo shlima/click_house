@@ -283,6 +283,7 @@ SQL
 ```ruby
 ClickHouse.connection.add_column('table', 'column_name', :UInt64, default: nil, after: nil, cluster: nil)
 ClickHouse.connection.drop_column('table', 'column_name', if_exists: nil, cluster: nil)
+ClickHouse.connection.clear_column('table', 'column_name', partition: 'partition_name', if_exists: nil, cluster: nil)
 ```
 
 ### Alter table with SQL

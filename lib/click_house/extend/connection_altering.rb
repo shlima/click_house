@@ -29,6 +29,18 @@ module ClickHouse
         alter_table(table, format(sql, pattern), cluster: cluster)
       end
 
+      def clear_column(table, name, partition:, if_exists: false, cluster: nil)
+        sql = 'CLEAR COLUMN %<exists>s %<name>s %<partition>s'
+
+        pattern = {
+          name: name,
+          exists: Util::Statement.ensure(if_exists, 'IF EXISTS'),
+          partition: "IN PARTITION #{partition}"
+        }
+
+        alter_table(table, format(sql, pattern), cluster: cluster)
+      end
+
       def alter_table(name, sql = nil, cluster: nil)
         template = 'ALTER TABLE %<name>s %<cluster>s %<sql>s'
         sql = yield(sql) if sql.nil?
