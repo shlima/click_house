@@ -296,7 +296,7 @@ ClickHouse.connection.alter_table('table', 'DROP COLUMN user_id', cluster: nil)
 # By SQL in a block
 ClickHouse.connection.alter_table('table', cluster: nil) do 
   <<~SQL
-    DROP COLUMN user_id
+    MOVE PART '20190301_14343_16206_438' TO VOLUME 'slow'
   SQL  
 end
 ```
