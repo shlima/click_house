@@ -91,6 +91,8 @@ ClickHouse.connection.table_exists?('visits', temporary: nil) #=> true
 ClickHouse.connection.drop_table('visits', if_exists: true, temporary: nil, cluster: nil)
 ClickHouse.connection.create_table(*) # see <Create a table> section
 ClickHouse.connection.truncate_table('name', if_exists: true, cluster: nil)
+ClickHouse.connection.rename_table('old_name', 'new_name', cluster: nil)
+ClickHouse.connection.rename_table(%w[table_1 table_2], %w[new_1 new_2], cluster: nil)
 ```
 
 ## Queries

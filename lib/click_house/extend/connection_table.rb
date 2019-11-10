@@ -86,6 +86,26 @@ module ClickHouse
 
         execute(format(sql, pattern)).success?
       end
+
+      def rename_table(from, to, cluster: nil)
+        from = Array(from)
+        to = Array(to)
+
+        unless from.length == to.length
+          raise StatementException, '<from> tables length should equal <to> length'
+        end
+
+        sql = <<~SQL
+          RENAME TABLE %<names>s %<cluster>s
+        SQL
+
+        pattern = {
+          names: from.zip(to).map { |a| a.join(' TO ') }.join(', '),
+          cluster: Util::Statement.ensure(cluster, "ON CLUSTER #{cluster}")
+        }
+
+        execute(format(sql, pattern)).success?
+      end
     end
   end
 end

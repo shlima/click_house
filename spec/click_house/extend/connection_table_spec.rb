@@ -128,4 +128,34 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
       end
     end
   end
+
+  describe '#rename_table' do
+    before do
+      subject.execute <<~SQL
+        CREATE TABLE bar(id Int64) ENGINE TinyLog
+      SQL
+
+      subject.execute <<~SQL
+        CREATE TABLE foo(id Int64) ENGINE TinyLog
+      SQL
+    end
+
+    context 'when 1 to 1' do
+      it 'works' do
+        expect { subject.rename_table('bar', 'baz') }.to change { subject.tables }.from(%w[bar foo]).to(%w[baz foo])
+      end
+    end
+
+    context 'when many to many' do
+      it 'works' do
+        expect { subject.rename_table(%w[bar foo], %w[baz foz]) }.to change { subject.tables }.from(%w[bar foo]).to(%w[baz foz])
+      end
+    end
+
+    context 'when incorrect arity' do
+      it 'errors' do
+        expect { subject.rename_table(%w[bar foo], %w[baz]) }.to raise_error(ClickHouse::StatementException)
+      end
+    end
+  end
 end
