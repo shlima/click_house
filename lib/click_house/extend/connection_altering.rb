@@ -12,7 +12,18 @@ module ClickHouse
           exists: Util::Statement.ensure(if_not_exists, 'IF NOT EXISTS'),
           type: Util::Statement.ensure(type, type),
           default: Util::Statement.ensure(default, "DEFAULT #{default}"),
-          after: Util::Statement.ensure(after, "AFTER #{after}"),
+          after: Util::Statement.ensure(after, "AFTER #{after}")
+        }
+
+        alter_table(table, format(sql, pattern), cluster: cluster)
+      end
+
+      def drop_column(table, name, if_exists: false, cluster: nil)
+        sql = 'DROP COLUMN %<exists>s %<name>s'
+
+        pattern = {
+          name: name,
+          exists: Util::Statement.ensure(if_exists, 'IF EXISTS')
         }
 
         alter_table(table, format(sql, pattern), cluster: cluster)
