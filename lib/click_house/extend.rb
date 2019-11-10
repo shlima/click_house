@@ -10,5 +10,6 @@ module ClickHouse
     autoload :ConnectionTable, 'click_house/extend/connection_table'
     autoload :ConnectionSelective, 'click_house/extend/connection_selective'
     autoload :ConnectionInserting, 'click_house/extend/connection_inserting'
+    autoload :ConnectionAltering, 'click_house/extend/connection_altering'
   end
 end

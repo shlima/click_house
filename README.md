@@ -30,6 +30,7 @@ Despite we have full compatibility of protocol of different versions of client a
 * [Insert](#insert)
 * [Insert an Array](#insert-an-array)
 * [Create a table](#create-a-table)
+* [Alter table](#alter-table)
 * [Type casting](#type-casting)
 * [Using with a connection pool](#using-with-a-connection-pool)
 * [Using with Rails](#using-with-rails)
@@ -275,6 +276,26 @@ end
 ClickHouse.connection.execute <<~SQL
   CREATE TABLE visits(int Nullable(Int8), date Nullable(Date)) ENGINE TinyLog
 SQL
+```
+
+## Alter table
+### Alter table with DSL
+```ruby
+ClickHouse.connection.add_column('table', 'column_name', :UInt64, default: nil, after: nil, cluster: nil)
+```
+
+### Alter table with SQL
+
+```ruby
+# By SQL in argument
+ClickHouse.connection.alter_table('table', 'DROP COLUMN user_id', cluster: nil)
+
+# By SQL in a block
+ClickHouse.connection.alter_table('table', cluster: nil) do 
+  <<~SQL
+    DROP COLUMN user_id
+  SQL  
+end
 ```
 
 ## Type casting
