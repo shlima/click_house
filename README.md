@@ -90,6 +90,7 @@ ClickHouse.connection.describe_table('visits') #=> [{"name"=>"id", "type"=>"Fixe
 ClickHouse.connection.table_exists?('visits', temporary: nil) #=> true
 ClickHouse.connection.drop_table('visits', if_exists: true, temporary: nil, cluster: nil)
 ClickHouse.connection.create_table(*) # see <Create a table> section
+ClickHouse.connection.truncate_table('name', if_exists: true, cluster: nil)
 ```
 
 ## Queries

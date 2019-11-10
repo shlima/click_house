@@ -100,4 +100,32 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
       end
     end
   end
+
+  describe '#truncate_table' do
+    context 'when table exists' do
+      before do
+        subject.execute <<~SQL
+          CREATE TABLE rspec(id Int64) ENGINE TinyLog
+        SQL
+
+        subject.insert('rspec', columns: %i[id], values: [[1]])
+      end
+
+      it 'works' do
+        expect { subject.truncate_table('rspec') }.to change { subject.select_value('SELECT COUNT(*) from rspec') }.from(1).to(0)
+      end
+    end
+
+    context 'when table not exists' do
+      it 'errors' do
+        expect { subject.truncate_table('rspec') }.to raise_error(ClickHouse::DbException)
+      end
+    end
+
+    context 'when if exists' do
+      it 'works' do
+        expect(subject.truncate_table('rspec', if_exists: true)).to eq(true)
+      end
+    end
+  end
 end

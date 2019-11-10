@@ -68,14 +68,24 @@ module ClickHouse
           sample: Util::Statement.ensure(sample, "SAMPLE BY  #{sample}"),
           ttl: Util::Statement.ensure(ttl, "TTL #{ttl}"),
           settings: Util::Statement.ensure(settings, "SETTINGS #{settings}"),
-          engine: Util::Statement.ensure(engine, "ENGINE = #{engine}"),
+          engine: Util::Statement.ensure(engine, "ENGINE = #{engine}")
         }
-
-        puts format(sql, pattern)
 
         execute(format(sql, pattern)).success?
       end
       # rubocop:enable Metrics/ParameterLists
+
+      def truncate_table(name, if_exists: false, cluster: nil)
+        sql = 'TRUNCATE TABLE %<exists>s %<name>s %<cluster>s'
+
+        pattern = {
+          name: name,
+          exists: Util::Statement.ensure(if_exists, 'IF EXISTS'),
+          cluster: Util::Statement.ensure(cluster, "ON CLUSTER #{cluster}")
+        }
+
+        execute(format(sql, pattern)).success?
+      end
     end
   end
 end
