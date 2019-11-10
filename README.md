@@ -3,6 +3,8 @@
 # ClickHouse Ruby driver
 
 [![pipeline status](https://travis-ci.com/shlima/click_house.svg?branch=master)](https://travis-ci.com/shlima/click_house)
+[![Code Climate](https://codeclimate.com/github/shlima/click_house/badges/gpa.svg)](https://codeclimate.com/github/shlima/click_house)
+[![Gem Version](https://badge.fury.io/rb/click_house.svg)](https://badge.fury.io/rb/click_house)
 
 ```bash
 # Requires modern Ruby (>= 2.5), tested with Yandex.Clickhouse v 19.16.2.2
