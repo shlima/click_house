@@ -5,6 +5,7 @@
 [![pipeline status](https://travis-ci.com/shlima/click_house.svg?branch=master)](https://travis-ci.com/shlima/click_house)
 
 ```bash
+# Requires modern Ruby (>= 2.5), tested with Yandex.Clickhouse v 19.16.2.2
 gem install click_house
 ```
 
@@ -13,7 +14,7 @@ is a high-performance column-oriented database management system developed by
 [Yandex](https://yandex.com/company) which operates Russia's most popular search engine.
 
 > This development was inspired by currently [unmaintainable alternative](https://github.com/archan937/clickhouse)
-> but rewritten and well tested. Requires modern Ruby (>= 2.6) and Yandex ClickHouse
+> but rewritten and well tested
 
 ### Why use the HTTP interface and not the TCP interface?
 
@@ -21,6 +22,8 @@ Well, the developers of ClickHouse themselves [discourage](https://github.com/ya
 
 > TCP transport is more specific, we don't want to expose details.
 Despite we have full compatibility of protocol of different versions of client and server, we want to keep the ability to "break" it for very old clients. And that protocol is not too clean to make a specification.
+
+Yandex uses HTTP interface for working from Java and Perl, Python and Go as well as shell scripts. 
 
 # TOC
 
