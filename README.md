@@ -428,6 +428,23 @@ scope = Visit.with_os.select('COUNT(*) as counter').group(:ipv4)
 ClickHouse.connection.select_all(scope.to_sql)
 ```` 
 
+You can clear the data table before each test with RSpec
+
+```ruby
+RSpec.configure do |config|
+  config.before(:each, clean_cleack_house: true) do
+    ClickHouse.connection.truncate_tables
+  end
+end
+```
+
+```ruby
+RSpec.describe Api::MetricsCountroller, clean_cleack_house: true do 
+  it { }
+  it { }
+end
+```
+
 ## Development
 
 ```bash
