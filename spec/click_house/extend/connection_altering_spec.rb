@@ -85,6 +85,48 @@ RSpec.describe ClickHouse::Extend::ConnectionAltering do
     end
   end
 
+  describe '#modify_column' do
+    before do
+      subject.execute <<~SQL
+        CREATE TABLE rspec (date Date, id UInt32, int_1 UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+      SQL
+    end
+
+    context 'when exists' do
+      let(:function) do
+        subject.modify_column('rspec', 'int_1', type: :UInt64, default: 0)
+      end
+
+      let(:column) do
+        -> { subject.describe_table('rspec').find { |r| r['name'] == 'int_1' } }
+      end
+
+      it 'works' do
+        expect { function }.to change { column.call.values_at('type', 'default_expression') }.to(['UInt64', "CAST(0, 'UInt64')"])
+      end
+    end
+
+    context 'when not exists' do
+      let(:function) do
+        subject.modify_column('rspec', 'foo', type: :UInt64)
+      end
+
+      it 'errors' do
+        expect { function }.to raise_error(ClickHouse::DbException)
+      end
+    end
+
+    context 'when if exists' do
+      let(:function) do
+        subject.modify_column('rspec', 'foo', type: :UInt64, if_exists: true)
+      end
+
+      it 'works' do
+        expect(function).to eq(true)
+      end
+    end
+  end
+
   describe '#alter_table' do
     before do
       subject.execute <<~SQL

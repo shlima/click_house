@@ -10,7 +10,7 @@ module ClickHouse
         pattern = {
           name: name,
           exists: Util::Statement.ensure(if_not_exists, 'IF NOT EXISTS'),
-          type: Util::Statement.ensure(type, type),
+          type: type,
           default: Util::Statement.ensure(default, "DEFAULT #{default}"),
           after: Util::Statement.ensure(after, "AFTER #{after}")
         }
@@ -36,6 +36,19 @@ module ClickHouse
           name: name,
           exists: Util::Statement.ensure(if_exists, 'IF EXISTS'),
           partition: "IN PARTITION #{partition}"
+        }
+
+        alter_table(table, format(sql, pattern), cluster: cluster)
+      end
+
+      def modify_column(table, name, type: nil, default: nil, if_exists: false, cluster: nil)
+        sql = 'MODIFY COLUMN %<exists>s %<name>s %<type>s %<default>s'
+
+        pattern = {
+          name: name,
+          type: type,
+          exists: Util::Statement.ensure(if_exists, 'IF EXISTS'),
+          default: Util::Statement.ensure(default, "DEFAULT #{default}")
         }
 
         alter_table(table, format(sql, pattern), cluster: cluster)
