@@ -5,8 +5,6 @@ module ClickHouse
     class ArrayType < BaseType
       attr_reader :subtype
 
-      STRING_QUOTE = "'"
-
       def initialize(subtype)
         @subtype = subtype
       end
@@ -16,22 +14,11 @@ module ClickHouse
       end
 
       def serialize(array, *argv)
-        return array unless string?
+        return unless array.is_a?(Array)
 
-        serialized = array.map do |value|
-          escaped = subtype.serialize(value, *argv).tr(STRING_QUOTE, '\\\\' + STRING_QUOTE)
-          format("%<quote>s#{escaped}%<quote>s", quote: STRING_QUOTE)
+        array.map do |value|
+          subtype.serialize(value, *argv)
         end
-
-        "[#{serialized.join(',')}]"
-      end
-
-      private
-
-      def string?
-        return @is_string if defined?(@is_string)
-
-        @is_string = subtype.is_a?(StringType) || subtype.is_a?(FixedStringType)
       end
     end
   end

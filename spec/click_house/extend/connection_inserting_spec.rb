@@ -12,7 +12,7 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
   describe '#insert' do
     context 'when block' do
       let(:insert) do
-        subject.insert('rspec', columns: %i[id name], values: [[1, 'Sun'], [2, 'Moon']])
+        subject.insert('rspec', columns: %i[name id], values: [['Sun', 1], ['Moon', 2]])
       end
 
       it 'works' do
@@ -23,9 +23,9 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
 
     context 'when params' do
       let(:insert) do
-        subject.insert('rspec', columns: %i[id name]) do |buffer|
-          buffer << [1, 'Sun']
-          buffer << [2, 'Moon']
+        subject.insert('rspec', columns: %i[name id]) do |buffer|
+          buffer << ['Sun', 1]
+          buffer << ['Moon', 2]
         end
       end
 

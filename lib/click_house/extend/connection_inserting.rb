@@ -5,8 +5,12 @@ module ClickHouse
     module ConnectionInserting
       def insert(table, columns:, values: [])
         yield(values) if block_given?
-        body = "#{columns.to_csv}#{values.map(&:to_csv).join('')}"
-        execute("INSERT INTO #{table} FORMAT CSVWithNames", body).success?
+
+        body = values.map do |value_row|
+          columns.zip(value_row).to_h.to_json
+        end
+
+        execute("INSERT INTO #{table} FORMAT JSONEachRow", body.join("\n")).success?
       end
     end
   end
