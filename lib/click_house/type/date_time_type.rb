@@ -8,7 +8,7 @@ module ClickHouse
       end
 
       def serialize(value)
-        value.strftime('%Y-%m-%d %H:%m:%S %p %z')
+        value.strftime('%Y-%m-%d %H:%M:%S')
       end
     end
   end

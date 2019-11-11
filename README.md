@@ -330,7 +330,15 @@ string_type = FixedStringType.new
 
 ClickHouse.connection.insert('table', columns: %i[name time]) do |buffer|
   buffer << [string_type.serialize('a' * 1000, 20), time.serialize(Time.current, 'Europe/Moscow')]
-end 
+end
+
+## alternatively
+data = @records.map do |record|
+  {
+    id: record.id,
+    time: ClickHouse.types['DateTime(%s)'].serialize(Time.current)
+  }
+end
 ```
 
 If native type supports arguments, define type with `%s` argument:
@@ -343,6 +351,15 @@ class DateTimeType
 end
 
 ClickHouse.add_type('DateTime(%s)', DateTimeType.new)
+```
+
+if you need to redefine all built-in types with your implementation, 
+just clear the default type system:
+
+```ruby
+ClickHouse.types.clear
+ClickHouse.types # => {}
+ClickHouse.types.default #=> #<ClickHouse::Type::UndefinedType:0x00007fc1cfabd630>
 ```
 
 ## Using with a connection pool
