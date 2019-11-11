@@ -2,7 +2,7 @@
 
 module ClickHouse
   module Type
-    class UndefinedType
+    class UndefinedType < BaseType
       def cast(value, *)
         value
       end

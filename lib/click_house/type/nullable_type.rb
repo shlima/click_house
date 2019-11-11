@@ -13,8 +13,8 @@ module ClickHouse
         subtype.cast(*argv) unless argv.first.nil?
       end
 
-      def serialize(value)
-        value.nil ? 'NULL' : subtype.serialize(value)
+      def serialize(*argv)
+        subtype.serialize(*argv) unless argv.first.nil?
       end
     end
   end
