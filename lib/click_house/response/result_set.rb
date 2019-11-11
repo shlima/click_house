@@ -9,7 +9,8 @@ module ClickHouse
       TYPE_ARGV_DELIM = ','
       NULLABLE = 'Nullable'
 
-      def_delegators :to_a, :each, :fetch, :length, :count, :size
+      def_delegators :to_a,
+                     :each, :fetch, :length, :count, :size, :first, :last, :[], :to_h
 
       attr_reader :meta, :data, :statistics
 
