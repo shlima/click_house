@@ -33,7 +33,6 @@ Yandex uses HTTP interface for working from Java and Perl, Python and Go as well
 * [Usage](#usage)
 * [Queries](#queries)
 * [Insert](#insert)
-* [Insert an Array](#insert-an-array)
 * [Create a table](#create-a-table)
 * [Alter table](#alter-table)
 * [Type casting](#type-casting)
@@ -184,24 +183,6 @@ end
 
 ClickHouse.connection.insert('table', columns: %i[id name], values: [[1, 'Mercury'], [2, 'Venus']])
 #=> true
-```
-
-## Insert an Array
-
-Serializing an Array of strings is pretty low level at the moment but it works (and thanks for that).
-Array of numeric types works as expected without pre-serialization   
-
-```ruby
-string_type = ClickHouse::Type::StringType.new
-array_of_string = ClickHouse::Type::ArrayType.new(string_type)
-
-data = [
-  { id: 1, tags: array_of_string.serialize(%w[ruby redis rails node]) }
-]
-
-subject.insert('rspec', columns: data.first.keys) do |buffer|
-  buffer.concat(data.map(&:values))
-end
 ```
 
 ## Create a table
