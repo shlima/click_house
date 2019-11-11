@@ -73,7 +73,8 @@ Now you are able to communicate with ClickHouse:
 ```ruby
 ClickHouse.connection.ping #=> true
 ```
-You can easily build a new raw connection
+You can easily build a new raw connection and override any configuration parameter 
+(such as database name, connection address)
 
 ```ruby
 @connection = ClickHouse::Connection.new(ClickHouse::Config.new(logger: Rails.logger))
@@ -442,14 +443,14 @@ You can clear the data table before each test with RSpec
 
 ```ruby
 RSpec.configure do |config|
-  config.before(:each, clean_click_house: true) do
+  config.before(:each, truncate_click_house: true) do
     ClickHouse.connection.truncate_tables
   end
 end
 ```
 
 ```ruby
-RSpec.describe Api::MetricsCountroller, clean_click_house: true do 
+RSpec.describe Api::MetricsCountroller, truncate_click_house: true do 
   it { }
   it { }
 end
