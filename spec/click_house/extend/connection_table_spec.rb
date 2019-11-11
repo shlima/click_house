@@ -181,4 +181,77 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
       end
     end
   end
+
+  describe '#create_table' do
+    context 'when column options' do
+      before do
+        subject.create_table('rspec', engine: 'MergeTree(date, (year, date), 8192)') do |t|
+          t.UInt16      :id, 16, default: 0, ttl: 'date + INTERVAL 1 DAY'
+          t.UInt16      :year
+          t.Date        :date
+          t.DateTime    :time, 'UTC'
+          t.Decimal     :money, 5, 4
+          t.String      :event, nullable: true
+          t.Nested      :json do |n|
+            n.UInt8     :cid
+            n.Date      :created_at
+          end
+          t << "vendor Enum('microsoft' = 1, 'apple' = 2)"
+        end
+      end
+
+      let(:columns) do
+        subject.describe_table('rspec').each_with_object({}) do |column, object|
+          object[column.fetch('name')] = column
+        end
+      end
+
+      it 'works' do
+        expect(columns.fetch('id')).to include('type' => 'UInt16', 'default_expression' => "CAST(0, 'UInt16')", 'ttl_expression' => 'date + toIntervalDay(1)')
+        expect(columns.fetch('year')).to include('type' => 'UInt16', 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('date')).to include('type' => 'Date', 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('time')).to include('type' => "DateTime('UTC')", 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('money')).to include('type' => 'Decimal(5, 4)', 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('event')).to include('type' => 'Nullable(String)', 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('json.cid')).to include('type' => 'Array(UInt8)', 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('json.created_at')).to include('type' => 'Array(Date)', 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('vendor')).to include('type' => "Enum8('microsoft' = 1, 'apple' = 2)")
+      end
+    end
+
+    context 'when table options' do
+      before do
+        subject.create_table('rspec',
+          order: 'year',
+          ttl: 'date + INTERVAL 1 DAY',
+          sample: 'year',
+          settings: 'index_granularity=8192',
+          primary_key: 'year',
+          engine: 'MergeTree') do |t|
+          t.UInt16  :year
+          t.Date    :date
+        end
+      end
+
+      let(:schema) do
+        subject.execute('SHOW CREATE rspec').body.strip
+      end
+
+      let(:expectation) do
+        <<~SQL
+          CREATE TABLE click_house_rspec.rspec (`year` UInt16, `date` Date) 
+            ENGINE = MergeTree 
+            PRIMARY KEY year 
+            ORDER BY year 
+            SAMPLE BY year
+            TTL date + toIntervalDay(1) 
+            SETTINGS index_granularity = 8192
+        SQL
+      end
+
+      it 'works' do
+        expect(ClickHouse::Util::Pretty.squish(schema)).to eq(ClickHouse::Util::Pretty.squish(expectation))
+      end
+    end
+  end
 end
