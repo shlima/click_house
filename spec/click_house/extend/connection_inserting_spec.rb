@@ -11,7 +11,7 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
     SQL
   end
 
-  context 'when block' do
+  context 'when block with columns' do
     let(:insert) do
       subject.insert('rspec', columns: %i[name id], values: [['Sun', 1], ['Moon', 2]])
     end
@@ -22,11 +22,36 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
     end
   end
 
-  context 'when params' do
+  context 'when argument with columns' do
     let(:insert) do
       subject.insert('rspec', columns: %i[name id]) do |buffer|
         buffer << ['Sun', 1]
         buffer << ['Moon', 2]
+      end
+    end
+
+    it 'works' do
+      expect(insert).to eq(true)
+      expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
+    end
+  end
+
+  context 'when hash with argument' do
+    let(:insert) do
+      subject.insert('rspec', values: [{ name: 'Sun', id: 1 }, { name: 'Moon', id: 2 }])
+    end
+
+    it 'works' do
+      expect(insert).to eq(true)
+      expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
+    end
+  end
+
+  context 'when hash with block' do
+    let(:insert) do
+      subject.insert('rspec') do |buffer|
+        buffer << { name: 'Sun', id: 1 }
+        buffer << { name: 'Moon', id: 2 }
       end
     end
 
@@ -47,7 +72,7 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
     end
   end
 
-  context 'when Nullable column' do
+  context 'when nullable column' do
     let(:insert) do
       subject.insert('rspec', columns: %i[date id name], values: [[nil, 1, 'foo']])
     end

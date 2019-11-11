@@ -176,6 +176,8 @@ response.body #=> "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
 
 ## Insert
 
+When column names and values are transferred separately
+
 ```ruby
 ClickHouse.connection.insert('table', columns: %i[id name]) do |buffer|
   buffer << [1, 'Mercury']
@@ -183,6 +185,19 @@ ClickHouse.connection.insert('table', columns: %i[id name]) do |buffer|
 end 
 
 ClickHouse.connection.insert('table', columns: %i[id name], values: [[1, 'Mercury'], [2, 'Venus']])
+#=> true
+```
+
+When rows are passed as a hash
+
+
+```ruby
+ClickHouse.connection.insert('table', values: [{ name: 'Sun', id: 1 }, { name: 'Moon', id: 2 }])
+
+ClickHouse.connection.insert('table') do |buffer|
+  buffer << { name: 'Sun', id: 1 }
+  buffer << { name: 'Moon', id: 2 }
+end
 #=> true
 ```
 

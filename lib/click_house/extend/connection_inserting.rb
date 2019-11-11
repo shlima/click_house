@@ -3,11 +3,13 @@
 module ClickHouse
   module Extend
     module ConnectionInserting
-      def insert(table, columns:, values: [])
+      def insert(table, columns: [], values: [])
         yield(values) if block_given?
 
-        body = values.map do |value_row|
-          columns.zip(value_row).to_h.to_json
+        body = if columns.empty?
+          values.map(&:to_json)
+        else
+          values.map { |value_row| columns.zip(value_row).to_h.to_json }
         end
 
         execute("INSERT INTO #{table} FORMAT JSONEachRow", body.join("\n")).success?
