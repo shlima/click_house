@@ -38,6 +38,9 @@ Yandex uses HTTP interface for working from Java and Perl, Python and Go as well
 * [Type casting](#type-casting)
 * [Using with a connection pool](#using-with-a-connection-pool)
 * [Using with Rails](#using-with-rails)
+* [Using with ActiveRecord](#using-with-activerecord)
+* [Using with RSpec](#using-with-rspec)
+* [Development](#development)
 
 ## Configuration
 
@@ -459,17 +462,56 @@ class CreateAdvertVisits < ActiveRecord::Migration[6.0]
 end
 ```
 
+## Using with ActiveRecord
+
 if you use `ActiveRecord`, you can use the ORM query builder by using fake models
+(empty tables must be present in the SQL database `create_table :visits`)
+
+```ruby
+class ClickHouseRecord < ActiveRecord::Base
+  self.abstract_class = true
+
+  class << self
+    def agent
+      ClickHouse.connection
+    end
+
+    def insert(*argv, &block)
+      agent.insert(table_name, *argv, &block)
+    end
+
+    def select_one
+      agent.select_one(current_scope.to_sql)
+    end
+
+    def select_value
+      agent.select_value(current_scope.to_sql)
+    end
+
+    def select_all
+      agent.select_all(current_scope.to_sql)
+    end
+  end
+end
+````
 
 ````ruby
 # FAKE MODEL FOR ClickHouse 
-class Visit < ApplicationRecord
+class Visit < ClickHouseRecord
   scope :with_os, -> { where.not(os_family_id: nil) }
 end
 
-scope = Visit.with_os.select('COUNT(*) as counter').group(:ipv4)
-ClickHouse.connection.select_all(scope.to_sql)
+Visit.with_os.select('COUNT(*) as counter').group(:ipv4).select_all
+#=> [{ 'ipv4' => 1455869, 'counter' => 104 }]
+
+Visit.with_os.select('COUNT(*)').select_value 
+#=> 20_345_678
+ 
+Visit.where(user_id: 1).select_one 
+#=> { 'ipv4' => 1455869, 'user_id' => 1 }  
 ```` 
+
+## Using with RSpec
 
 You can clear the data table before each test with RSpec
 
