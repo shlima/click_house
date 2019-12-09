@@ -31,22 +31,22 @@ Metrics/AbcSize:
 
 # ============================== Naming =============================
 Naming/PredicateName:
-  NamePrefixBlacklist:
+  ForbiddenPrefixes:
     - is_
 Naming/FileName:
   Enabled: true
   Exclude:
     - 'Gemfile'
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 Naming/AccessorMethodName:
   Enabled: false
 
 # ============================== Layout =============================
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedHashRocketStyle: key
   EnforcedColonStyle: key
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 Layout/CaseIndentation:
   EnforcedStyle: case
@@ -65,9 +65,9 @@ Layout/EmptyLinesAroundBlockBody:
   Enabled: true
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   Enabled: false
 Layout/RescueEnsureAlignment:
   Enabled: false
