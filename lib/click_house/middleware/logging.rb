@@ -26,7 +26,7 @@ module ClickHouse
         logger.level == Logger::DEBUG
       end
 
-      # rubocop:disable Metrics/LineLength
+      # rubocop:disable Layout/LineLength
       def on_complete(env)
         summary = extract_summary(env.response_headers)
         elapsed = duration
@@ -36,7 +36,7 @@ module ClickHouse
         logger.debug(body) if body
         logger.info("\e[1m[36mRead: #{summary.fetch(:read_rows)} rows, #{summary.fetch(:read_bytes)}. Written: #{summary.fetch(:written_rows)}, rows #{summary.fetch(:written_bytes)}\e[0m")
       end
-      # rubocop:enable Metrics/LineLength
+      # rubocop:enable Layout/LineLength
 
       def duration
         timestamp - starting
