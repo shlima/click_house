@@ -190,6 +190,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
           t.UInt16      :year
           t.Date        :date
           t.DateTime    :time, 'UTC'
+          t.DateTime64  :time_with_usec, 4, 'UTC'
           t.Decimal     :money, 5, 4
           t.String      :event, nullable: true
           t.Nested      :json do |n|
@@ -211,6 +212,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
         expect(columns.fetch('year')).to include('type' => 'UInt16', 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('date')).to include('type' => 'Date', 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('time')).to include('type' => "DateTime('UTC')", 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('time_with_usec')).to include('type' => "DateTime64(4, 'UTC')", 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('money')).to include('type' => 'Decimal(5, 4)', 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('event')).to include('type' => 'Nullable(String)', 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('json.cid')).to include('type' => 'Array(UInt8)', 'default_expression' => '', 'ttl_expression' => '')

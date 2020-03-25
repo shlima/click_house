@@ -11,7 +11,7 @@ module ClickHouse
         'FixedString(%d)',
         'UUID',
         'Date',
-        "DateTime('%s')"
+        "DateTime('%s')", "DateTime64(%d, '%s')"
       ].freeze
 
       class << self

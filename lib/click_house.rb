@@ -41,6 +41,11 @@ module ClickHouse
     add_type "Nullable(#{column})", Type::NullableType.new(Type::DateTimeType.new)
   end
 
+  ['DateTime64(%d, %s)'].each do |column|
+    add_type column, Type::DateTime64Type.new
+    add_type "Nullable(#{column})", Type::NullableType.new(Type::DateTime64Type.new)
+  end
+
   ['Decimal(%s, %s)', 'Decimal32(%s)', 'Decimal64(%s)', 'Decimal128(%s)'].each do |column|
     add_type column, Type::DecimalType.new
     add_type "Nullable(#{column})", Type::NullableType.new(Type::DecimalType.new)

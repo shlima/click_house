@@ -12,6 +12,7 @@ RSpec.describe ClickHouse::Definition::ColumnSet do
           n.UInt8 :cid, nullable: true
           n.Date  :created_at, default: 'NOW()'
           n.DateTime :updated_at, 'UTC'
+          n.DateTime64 :deleted_at, 6, 'UTC'
         end
         t << "words Enum('hello' = 1, 'world' = 2)"
         t << "tags Array(String)"
@@ -26,7 +27,8 @@ RSpec.describe ClickHouse::Definition::ColumnSet do
           json Nested ( 
                         cid Nullable(UInt8) , 
                         created_at Date DEFAULT NOW(), 
-                        updated_at DateTime('UTC')  
+                        updated_at DateTime('UTC'),
+                        deleted_at DateTime64(6, 'UTC')  
                       ), 
           words Enum('hello' = 1, 'world' = 2), 
           tags Array(String) 
