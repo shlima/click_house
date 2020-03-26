@@ -22,7 +22,7 @@ RSpec.describe ClickHouse::Extend::ConnectionAltering do
       it 'works' do
         expect(subject.describe_table('rspec').map { |r| r['name'] }).to eq(%w[date account_id id user_id])
         expect(column).to include('type' => 'UInt64')
-        expect(column).to include('default_expression' => "CAST(0, 'UInt64')")
+        expect(column).to include('default_expression' => '0')
       end
     end
 
@@ -102,7 +102,7 @@ RSpec.describe ClickHouse::Extend::ConnectionAltering do
       end
 
       it 'works' do
-        expect { function }.to change { column.call.values_at('type', 'default_expression') }.to(['UInt64', "CAST(0, 'UInt64')"])
+        expect { function }.to change { column.call.values_at('type', 'default_expression') }.to(['UInt64', '0'])
       end
     end
 
