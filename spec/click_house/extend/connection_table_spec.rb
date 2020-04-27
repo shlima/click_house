@@ -208,7 +208,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
       end
 
       it 'works' do
-        expect(columns.fetch('id')).to include('type' => 'UInt16', 'default_expression' => "CAST(0, 'UInt16')", 'ttl_expression' => 'date + toIntervalDay(1)')
+        expect(columns.fetch('id')).to include('type' => 'UInt16', 'default_expression' => '0', 'ttl_expression' => 'date + toIntervalDay(1)')
         expect(columns.fetch('year')).to include('type' => 'UInt16', 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('date')).to include('type' => 'Date', 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('time')).to include('type' => "DateTime('UTC')", 'default_expression' => '', 'ttl_expression' => '')
