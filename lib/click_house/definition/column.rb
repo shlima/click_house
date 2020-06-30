@@ -39,7 +39,7 @@ module ClickHouse
       def extension_type
         extensions.nil? ? type : format(type, *extensions)
       rescue TypeError, ArgumentError
-        raise Exception, "please provide extensions for <#{type}>"
+        raise StandardError, "please provide extensions for <#{type}>"
       end
     end
   end

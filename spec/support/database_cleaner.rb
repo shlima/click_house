@@ -1,4 +1,4 @@
-SYSTEM_DATABASES = %w[default system]
+SYSTEM_DATABASES = %w[default system _temporary_and_external_tables]
 
 RSpec.configure do |config|
   config.around(:each) do |example|

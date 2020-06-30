@@ -236,18 +236,22 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
       end
 
       let(:schema) do
-        subject.execute('SHOW CREATE rspec').body.strip
+        subject.execute('SHOW CREATE rspec FORMAT TabSeparatedRaw').body
       end
 
       let(:expectation) do
         <<~SQL
-          CREATE TABLE click_house_rspec.rspec (`year` UInt16, `date` Date) 
-            ENGINE = MergeTree 
-            PRIMARY KEY year 
-            ORDER BY year 
-            SAMPLE BY year
-            TTL date + toIntervalDay(1) 
-            SETTINGS index_granularity = 8192
+          CREATE TABLE click_house_rspec.rspec 
+          (
+              `year` UInt16, 
+              `date` Date
+          ) 
+          ENGINE = MergeTree 
+          PRIMARY KEY year 
+          ORDER BY year 
+          SAMPLE BY year
+          TTL date + toIntervalDay(1) 
+          SETTINGS index_granularity = 8192
         SQL
       end
 
