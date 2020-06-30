@@ -6,6 +6,15 @@ module ClickHouse
       EMPTY_INSERT = true
 
       # @return [Boolean]
+      #
+      # == Example with a block
+      # insert('rspec', columns: %i[name id]) do |buffer|
+      #   buffer << ['Sun', 1]
+      #   buffer << ['Moon', 2]
+      # end
+      #
+      # == Example with a param
+      # subject.insert('rspec', values: [{ name: 'Sun', id: 1 }, { name: 'Moon', id: 2 }])
       def insert(table, columns: [], values: [])
         yield(values) if block_given?
 
