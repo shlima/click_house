@@ -216,7 +216,8 @@ ClickHouse.connection.create_table('visits', if_not_exists: true, engine: 'Merge
   t.Decimal     :money, 5, 4
   t.String      :event
   t.UInt32      :user_id
-  t.UInt32      :Float32
+  t.IPv4        :ipv4
+  t.IPv6        :ipv6
 end
 ```
 
@@ -448,11 +449,6 @@ class CreateAdvertVisits < ActiveRecord::Migration[6.0]
       t.UInt16   :account_id
       t.UInt16   :user_id
       t.Date     :date
-      t.DateTime :time, 'UTC'
-      t.IPv4     :ipv4
-      t.IPv6     :ipv6
-      t.UInt32   :device_type_id
-      t.UInt32   :os_family_id
     end
   end
 
