@@ -15,5 +15,6 @@ module ClickHouse
     autoload :FixedStringType, 'click_house/type/fixed_string_type'
     autoload :ArrayType, 'click_house/type/array_type'
     autoload :StringType, 'click_house/type/string_type'
+    autoload :IPType, 'click_house/type/ip_type'
   end
 end

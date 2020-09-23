@@ -1,3 +1,6 @@
+# 1.3.0
+* added support for IPv4/IPv6 types
+
 # 1.2.7
 * rubocop version bump
 

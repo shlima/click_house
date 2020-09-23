@@ -188,6 +188,8 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
         subject.create_table('rspec', engine: 'MergeTree(date, (year, date), 8192)') do |t|
           t.UInt16      :id, 16, default: 0, ttl: 'date + INTERVAL 1 DAY'
           t.UInt16      :year
+          t.IPv4        :ipv4
+          t.IPv6        :ipv6
           t.Date        :date
           t.DateTime    :time, 'UTC'
           t.DateTime64  :time_with_usec, 4, 'UTC'
@@ -210,6 +212,8 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
       it 'works' do
         expect(columns.fetch('id')).to include('type' => 'UInt16', 'default_expression' => '0', 'ttl_expression' => 'date + toIntervalDay(1)')
         expect(columns.fetch('year')).to include('type' => 'UInt16', 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('ipv4')).to include('type' => 'IPv4', 'default_expression' => '', 'ttl_expression' => '')
+        expect(columns.fetch('ipv6')).to include('type' => 'IPv6', 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('date')).to include('type' => 'Date', 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('time')).to include('type' => "DateTime('UTC')", 'default_expression' => '', 'ttl_expression' => '')
         expect(columns.fetch('time_with_usec')).to include('type' => "DateTime64(4, 'UTC')", 'default_expression' => '', 'ttl_expression' => '')

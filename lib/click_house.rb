@@ -60,4 +60,9 @@ module ClickHouse
     add_type column, Type::FloatType.new
     add_type "Nullable(#{column})", Type::NullableType.new(Type::IntegerType.new)
   end
+
+  %w[IPv4 IPv6].each do |column|
+    add_type column, Type::IPType.new
+    add_type "Nullable(#{column})", Type::NullableType.new(Type::IPType.new)
+  end
 end

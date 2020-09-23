@@ -11,6 +11,7 @@ module ClickHouse
         'FixedString(%d)',
         'UUID',
         'Date',
+        'IPv4', 'IPv6',
         "DateTime('%s')", "DateTime64(%d, '%s')"
       ].freeze
 

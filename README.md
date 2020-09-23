@@ -7,7 +7,7 @@
 [![Gem Version](https://badge.fury.io/rb/click_house.svg)](https://badge.fury.io/rb/click_house)
 
 ```bash
-# Requires modern Ruby (>= 2.5), tested with Yandex.Clickhouse v 20.6.4.44
+# Requires modern Ruby (>= 2.5), tested with Yandex.Clickhouse v 20.9.2.20
 gem install click_house
 ```
 
@@ -449,8 +449,8 @@ class CreateAdvertVisits < ActiveRecord::Migration[6.0]
       t.UInt16   :user_id
       t.Date     :date
       t.DateTime :time, 'UTC'
-      t.UInt32   :ipv4
-      t.UInt64   :ipv6
+      t.IPv4     :ipv4
+      t.IPv6     :ipv6
       t.UInt32   :device_type_id
       t.UInt32   :os_family_id
     end
