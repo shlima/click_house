@@ -20,11 +20,11 @@ module ClickHouse
     end
 
     def get(path = '/', query: {}, database: config.database)
-      transport.get(compose(path, query.merge(database: database)))
+      transport.get(compose(path, query.merge(database: database)), config.headers)
     end
 
     def post(body = nil, query: {}, database: config.database)
-      transport.post(compose('/', query.merge(database: database)), body)
+      transport.post(compose('/', query.merge(database: database)), body, config.headers)
     end
 
     def transport
