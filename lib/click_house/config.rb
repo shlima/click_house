@@ -18,7 +18,8 @@ module ClickHouse
       password: nil,
       timeout: nil,
       open_timeout: nil,
-      ssl_verify: false
+      ssl_verify: false,
+      headers: {}
     }.freeze
 
     attr_accessor :adapter
@@ -33,6 +34,7 @@ module ClickHouse
     attr_accessor :timeout
     attr_accessor :open_timeout
     attr_accessor :ssl_verify
+    attr_accessor :headers
 
     def initialize(params = {})
       assign(DEFAULTS.merge(params))
