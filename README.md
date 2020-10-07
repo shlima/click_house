@@ -53,6 +53,7 @@ ClickHouse.config do |config|
   config.timeout = 60
   config.open_timeout = 3
   config.ssl_verify = false
+  config.headers = {}
   
   # or provide connection options separately
   config.scheme = 'http' 
