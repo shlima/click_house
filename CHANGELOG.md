@@ -1,3 +1,6 @@
+# 1.3.3
+* fix logger typo
+
 # 1.3.2
 * fix null logger for windows users
 
