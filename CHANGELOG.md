@@ -1,3 +1,6 @@
+# 1.3.2
+* fix null logger for windows users
+
 # 1.3.1
 * added request [headers](https://github.com/shlima/click_house/pull/8) support
 

@@ -53,7 +53,7 @@ module ClickHouse
     end
 
     def logger!
-      @logger || Logger.new('/dev/null')
+      @logger || Logger.new(IO::NULL)
     end
 
     def url!
