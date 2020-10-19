@@ -7,7 +7,7 @@
 [![Gem Version](https://badge.fury.io/rb/click_house.svg)](https://badge.fury.io/rb/click_house)
 
 ```bash
-# Requires modern Ruby (>= 2.5), tested with Yandex.Clickhouse v 20.9.2.20
+# Requires modern Ruby (>= 2.5), tested with Yandex.Clickhouse v 20.9.3.45
 gem install click_house
 ```
 

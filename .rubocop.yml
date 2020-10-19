@@ -34,6 +34,8 @@ Performance/Squeeze:
   Enabled: true
 Performance/StringInclude:
   Enabled: true
+Performance/Sum:
+  Enabled: true
 
 # ============================== Metrics ============================
 Metrics/ClassLength:
@@ -181,6 +183,16 @@ Style/SingleArgumentDig:
   Enabled: true
 Style/StringConcatenation:
   Enabled: true
+Style/ClassEqualityComparison:
+  Enabled: true
+Style/CombinableLoops:
+  Enabled: true
+Style/KeywordParametersOrder:
+  Enabled: false
+Style/RedundantSelfAssignment:
+  Enabled: true
+Style/SoleNestedConditional:
+  Enabled: true
 
 # ============================== Lint ==============================
 Lint/DuplicateMethods:
@@ -214,4 +226,24 @@ Lint/SelfAssignment:
 Lint/TopLevelReturnWithArgument:
   Enabled: true
 Lint/UnreachableLoop:
+  Enabled: true
+Layout/BeginEndAlignment:
+  Enabled: true
+Lint/ConstantDefinitionInBlock:
+  Enabled: true
+Lint/DuplicateRequire:
+  Enabled: true
+Lint/EmptyFile:
+  Enabled: true
+Lint/HashCompareByIdentity:
+  Enabled: true
+Lint/IdentityComparison:
+  Enabled: true
+Lint/RedundantSafeNavigation:
+  Enabled: true
+Lint/TrailingCommaInAttributeDeclaration:
+  Enabled: true
+Lint/UselessMethodDefinition:
+  Enabled: true
+Lint/UselessTimes:
   Enabled: true
