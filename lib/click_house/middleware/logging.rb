@@ -34,7 +34,7 @@ module ClickHouse
 
         logger.info("\e[1m[35mSQL (#{Util::Pretty.measure(elapsed)})\e[0m #{query};")
         logger.debug(body) if body
-        logger.info("\e[1m[36mRead: #{summary.fetch(:read_rows)} rows, #{summary.fetch(:read_bytes)}. Written: #{summary.fetch(:written_rows)}, rows #{summary.fetch(:written_bytes)}\e[0m")
+        logger.info("\e[1m[36mRead: #{summary.fetch(:read_rows)} rows, #{summary.fetch(:read_bytes)}. Written: #{summary.fetch(:written_rows)} rows, #{summary.fetch(:written_bytes)}\e[0m")
       end
       # rubocop:enable Layout/LineLength
 
