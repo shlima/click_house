@@ -28,41 +28,33 @@ module ClickHouse
 
   %w[Date].each do |column|
     add_type column, Type::DateType.new
-    add_type "Nullable(#{column})", Type::NullableType.new(Type::DateType.new)
   end
 
-  %w[String].each do |column|
+  %w[String FixedString(%d) UUID].each do |column|
     add_type column, Type::StringType.new
-    add_type "Nullable(#{column})", Type::NullableType.new(Type::StringType.new)
   end
 
   ['DateTime(%s)'].each do |column|
     add_type column, Type::DateTimeType.new
-    add_type "Nullable(#{column})", Type::NullableType.new(Type::DateTimeType.new)
   end
 
   ['DateTime64(%d, %s)'].each do |column|
     add_type column, Type::DateTime64Type.new
-    add_type "Nullable(#{column})", Type::NullableType.new(Type::DateTime64Type.new)
   end
 
-  ['Decimal(%s, %s)', 'Decimal32(%s)', 'Decimal64(%s)', 'Decimal128(%s)'].each do |column|
+  ['Decimal(%d, %d)', 'Decimal32(%d)', 'Decimal64(%d)', 'Decimal128(%d)'].each do |column|
     add_type column, Type::DecimalType.new
-    add_type "Nullable(#{column})", Type::NullableType.new(Type::DecimalType.new)
   end
 
   %w[UInt8 UInt16 UInt32 UInt64 Int8 Int16 Int32 Int64].each do |column|
     add_type column, Type::IntegerType.new
-    add_type "Nullable(#{column})", Type::NullableType.new(Type::IntegerType.new)
   end
 
   %w[Float32 Float64].each do |column|
     add_type column, Type::FloatType.new
-    add_type "Nullable(#{column})", Type::NullableType.new(Type::IntegerType.new)
   end
 
   %w[IPv4 IPv6].each do |column|
     add_type column, Type::IPType.new
-    add_type "Nullable(#{column})", Type::NullableType.new(Type::IPType.new)
   end
 end

@@ -3,17 +3,7 @@
 module ClickHouse
   module Definition
     class ColumnSet
-      TYPES = [
-        'UInt8', 'UInt16', 'UInt32', 'UInt64', 'Int8', 'Int16', 'Int32', 'Int64',
-        'Float32', 'Float64',
-        'Decimal(%d, %d)', 'Decimal32(%d)', 'Decimal64(%d)', 'Decimal128(%d)',
-        'String',
-        'FixedString(%d)',
-        'UUID',
-        'Date',
-        'IPv4', 'IPv6',
-        "DateTime('%s')", "DateTime64(%d, '%s')"
-      ].freeze
+      TYPES = ClickHouse.type_names(nullable: false).map { |s| s.sub('%s', "'%s'") }.freeze
 
       class << self
         # @input "DateTime('%s')"

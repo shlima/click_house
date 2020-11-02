@@ -346,7 +346,8 @@ data = @records.map do |record|
 end
 ```
 
-If native type supports arguments, define type with `%s` argument:
+If native type supports arguments, define *String* type with `%s` 
+argument and *Numeric* type with `%d` argument:
 
 ```ruby
 class DateTimeType
