@@ -1,6 +1,7 @@
 # 1.3.4
 * added `ClickHouse.type_names(nullable: false)`
 * fixed `connection#create_table` column definitions
+* `ClickHouse.add_type` now handles Nullable types automatically
 
 # 1.3.3
 * fix logger typo
