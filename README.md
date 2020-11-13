@@ -399,6 +399,10 @@ development:
 test:
   database: ecliptic_test
   <<: *default
+  
+production:
+  <<: *default
+  database: ecliptic_production
 ```
 
 ```ruby
