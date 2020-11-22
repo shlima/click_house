@@ -8,6 +8,7 @@ module ClickHouse
 
       TYPE_ARGV_DELIM = ','
       NULLABLE = 'Nullable'
+      NULLABLE_TYPE_RE = /#{NULLABLE}\((.+)\)/i.freeze
 
       def_delegators :to_a,
                      :each, :fetch, :length, :count, :size, :first, :last, :[], :to_h
@@ -28,7 +29,7 @@ module ClickHouse
         # @input "Decimal(10, 5)"
         # @output "Decimal(%s, %s)"
         def extract_type_info(type)
-          type = type.gsub(/#{NULLABLE}\((.+)\)/i, '\1')
+          type = type.gsub(NULLABLE_TYPE_RE, '\1')
           nullable = Regexp.last_match(1)
           argv = []
 
