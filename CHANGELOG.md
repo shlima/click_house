@@ -1,3 +1,6 @@
+# 1.3.5
+* added `ClickHouse.connexction.explain("sql")` 
+
 # 1.3.4
 * added `ClickHouse.type_names(nullable: false)`
 * fixed `connection#create_table` column definitions

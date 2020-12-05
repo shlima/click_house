@@ -11,5 +11,6 @@ module ClickHouse
     autoload :ConnectionSelective, 'click_house/extend/connection_selective'
     autoload :ConnectionInserting, 'click_house/extend/connection_inserting'
     autoload :ConnectionAltering, 'click_house/extend/connection_altering'
+    autoload :ConnectionExplaining, 'click_house/extend/connection_explaining'
   end
 end

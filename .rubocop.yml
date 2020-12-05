@@ -3,13 +3,13 @@ require:
 
 AllCops:
   AutoCorrect: false
+  SuggestExtensions: false
   Exclude:
     - 'click_house.gemspec'
     - 'bin/*'
     - 'spec/**/*'
     - 'vendor/**/*'
   TargetRubyVersion: 2.7
-
 Bundler/OrderedGems:
   Enabled: false
 
@@ -215,6 +215,8 @@ Style/NilLambda:
   Enabled: true
 Style/SwapValues:
   Enabled: true
+Style/RedundantArgument:
+  Enabled: true
 
 # ============================== Lint ==============================
 Lint/DuplicateMethods:
@@ -282,4 +284,6 @@ Lint/NoReturnInBeginEndBlocks:
 Lint/ToEnumArguments:
   Enabled: true
 Lint/UnmodifiedReduceAccumulator:
+  Enabled: true
+Lint/UnexpectedBlockArity:
   Enabled: true

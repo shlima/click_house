@@ -105,6 +105,11 @@ ClickHouse.connection.truncate_tables(['table_1', 'table_2'], if_exists: true, c
 ClickHouse.connection.truncate_tables # will truncate all tables in database
 ClickHouse.connection.rename_table('old_name', 'new_name', cluster: nil)
 ClickHouse.connection.rename_table(%w[table_1 table_2], %w[new_1 new_2], cluster: nil)
+
+ClickHouse.connection.select_all('SELECT * FROM visits')
+ClickHouse.connection.select_one('SELECT * FROM visits LIMIT 1')
+ClickHouse.connection.select_value('SELECT ip FROM visits LIMIT 1')
+ClickHouse.connection.explain('SELECT * FROM visits CROSS JOIN visits')
 ```
 
 ## Queries
