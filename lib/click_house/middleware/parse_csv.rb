@@ -10,7 +10,7 @@ module ClickHouse
       end
 
       define_parser do |body, parser_options|
-        CSV.parse(body, parser_options || {}) unless body.strip.empty?
+        CSV.parse(body, **Hash.new(parser_options)) unless body.strip.empty?
       end
     end
   end
