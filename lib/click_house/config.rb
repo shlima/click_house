@@ -2,10 +2,6 @@
 
 module ClickHouse
   class Config
-    DEFAULT_SCHEME = 'http'
-    DEFAULT_HOST = 'localhost'
-    DEFAULT_PORT = '8123'
-
     DEFAULTS = {
       adapter: Faraday.default_adapter,
       url: nil,
