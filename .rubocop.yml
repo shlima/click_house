@@ -54,8 +54,6 @@ Metrics/BlockLength:
   Enabled: true
 Metrics/MethodLength:
   Max: 25
-Metrics/LineLength:
-  Max: 140
 Metrics/AbcSize:
   Max: 40
 
@@ -73,6 +71,8 @@ Naming/AccessorMethodName:
   Enabled: false
 
 # ============================== Layout =============================
+Layout/LineLength:
+  Max: 140
 Layout/HashAlignment:
   EnforcedHashRocketStyle: key
   EnforcedColonStyle: key

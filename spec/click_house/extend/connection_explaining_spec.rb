@@ -16,11 +16,13 @@ RSpec.describe ClickHouse::Extend::ConnectionExplaining do
           Expression (Before ORDER BY and SELECT)
             Join (JOIN)
               Expression (Before JOIN)
-                ReadFromStorage (Read from TinyLog)
+                SettingQuotaAndLimits (Set limits and quota after reading from storage)
+                  ReadFromStorage (TinyLog)
           CreatingSet (Create set for JOIN)
             Expression (Projection)
               Expression (Before ORDER BY and SELECT)
-                ReadFromStorage (Read from TinyLog)
+                SettingQuotaAndLimits (Set limits and quota after reading from storage)
+                  ReadFromStorage (TinyLog)
     TXT
   end
 
