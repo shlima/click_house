@@ -1,3 +1,6 @@
+# 1.3.8
+* fix `DateTime` casting for queries like `ClickHouse.connection.select_value('select NOW()')` 
+
 # 1.3.7
 * specify required ruby version [#10](https://github.com/shlima/click_house/issues/10)
 
