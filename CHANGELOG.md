@@ -1,3 +1,6 @@
+# 1.3.7
+* specify required ruby version [#10](https://github.com/shlima/click_house/issues/10)
+
 # 1.3.6
 * fix ruby 2.7 warning `maybe ** should be added to the call` on `ClickHouse.connection.databases`
 
