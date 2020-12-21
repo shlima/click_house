@@ -7,7 +7,6 @@
 [![Gem Version](https://badge.fury.io/rb/click_house.svg)](https://badge.fury.io/rb/click_house)
 
 ```bash
-# Requires Ruby >= 2.5
 gem install click_house
 ```
 
