@@ -104,6 +104,7 @@ ClickHouse.connection.truncate_tables(['table_1', 'table_2'], if_exists: true, c
 ClickHouse.connection.truncate_tables # will truncate all tables in database
 ClickHouse.connection.rename_table('old_name', 'new_name', cluster: nil)
 ClickHouse.connection.rename_table(%w[table_1 table_2], %w[new_1 new_2], cluster: nil)
+ClickHouse.connection.alter_table('table', 'DROP COLUMN user_id', cluster: nil)
 ClickHouse.connection.add_index('table', 'ix', 'has(b, a)', type: 'minmax', granularity: 2, cluster: nil)
 ClickHouse.connection.drop_index('table', 'ix', cluster: nil)
 
