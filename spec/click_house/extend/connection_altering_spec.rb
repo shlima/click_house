@@ -156,4 +156,17 @@ RSpec.describe ClickHouse::Extend::ConnectionAltering do
       end
     end
   end
+
+  describe '#add_index, #drop_index' do
+    before do
+      subject.execute <<~SQL
+        CREATE TABLE rspec(a String, b Array(String)) engine=MergeTree() order by a;
+      SQL
+    end
+
+    it 'works' do
+      expect(subject.add_index('rspec', 'ix', 'has(b, a)', type: 'minmax', granularity: 2)).to eq(true)
+      expect(subject.drop_index('rspec', 'ix')).to eq(true)
+    end
+  end
 end

@@ -66,6 +66,33 @@ module ClickHouse
 
         execute(format(template, pattern)).success?
       end
+
+      def add_index(
+        table_name,
+        name,
+        expression,
+        type:,
+        granularity: nil,
+        after: nil,
+        cluster: nil
+      )
+        template = 'ADD INDEX %<name>s %<expression>s TYPE %<type>s GRANULARITY %<granularity>d %<after>s'
+        pattern = {
+          name: name,
+          expression: expression,
+          type: type,
+          granularity: granularity,
+          after: Util::Statement.ensure(after, "AFTER #{after}"),
+        }
+
+        alter_table(table_name, format(template, pattern), cluster: cluster)
+      end
+
+      def drop_index(table_name, name, cluster: nil)
+        alter_table(table_name, <<~SQL, cluster: cluster)
+          DROP INDEX #{name}
+        SQL
+      end
     end
   end
 end

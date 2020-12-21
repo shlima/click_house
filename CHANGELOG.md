@@ -1,3 +1,6 @@
+# 1.3.9
+* add `ClickHouse.connection.add_index`, `ClickHouse.connection.drop_index`
+
 # 1.3.8
 * fix `DateTime` casting for queries like `ClickHouse.connection.select_value('select NOW()')` 
 * fix resulting set console inspection
@@ -9,7 +12,7 @@
 * fix ruby 2.7 warning `maybe ** should be added to the call` on `ClickHouse.connection.databases`
 
 # 1.3.5
-* added `ClickHouse.connexction.explain("sql")` 
+* added `ClickHouse.connection.explain("sql")` 
 
 # 1.3.4
 * added `ClickHouse.type_names(nullable: false)`

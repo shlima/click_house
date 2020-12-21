@@ -104,6 +104,8 @@ ClickHouse.connection.truncate_tables(['table_1', 'table_2'], if_exists: true, c
 ClickHouse.connection.truncate_tables # will truncate all tables in database
 ClickHouse.connection.rename_table('old_name', 'new_name', cluster: nil)
 ClickHouse.connection.rename_table(%w[table_1 table_2], %w[new_1 new_2], cluster: nil)
+ClickHouse.connection.add_index('table', 'ix', 'has(b, a)', type: 'minmax', granularity: 2, cluster: nil)
+ClickHouse.connection.drop_index('table', 'ix', cluster: nil)
 
 ClickHouse.connection.select_all('SELECT * FROM visits')
 ClickHouse.connection.select_one('SELECT * FROM visits LIMIT 1')
@@ -496,6 +498,10 @@ class ClickHouseRecord < ActiveRecord::Base
 
     def select_all
       agent.select_all(current_scope.to_sql)
+    end
+
+    def explain
+      agent.explain(current_scope.to_sql)
     end
   end
 end
