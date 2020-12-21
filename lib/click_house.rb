@@ -34,7 +34,7 @@ module ClickHouse
     add_type column, Type::StringType.new
   end
 
-  ['DateTime(%s)'].each do |column|
+  %w[DateTime DateTime(%s)].each do |column|
     add_type column, Type::DateTimeType.new
   end
 

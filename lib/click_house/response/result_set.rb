@@ -11,7 +11,8 @@ module ClickHouse
       NULLABLE_TYPE_RE = /#{NULLABLE}\((.+)\)/i.freeze
 
       def_delegators :to_a,
-                     :each, :fetch, :length, :count, :size, :first, :last, :[], :to_h
+                     :inspect, :each, :fetch, :length, :count, :size,
+                     :first, :last, :[], :to_h
 
       attr_reader :meta, :data, :statistics
 
@@ -71,10 +72,6 @@ module ClickHouse
             arguments: argv
           }
         end
-      end
-
-      def inspect
-        to_a
       end
     end
   end

@@ -3,6 +3,12 @@ RSpec.describe ClickHouse::Type do
     ClickHouse.connection
   end
 
+  context 'when NOW()' do
+    it 'works' do
+      expect(subject.select_value('SELECT NOW()')).to be_a(DateTime)
+    end
+  end
+
   context 'when extendable (one arg)' do
     before do
       subject.execute <<~SQL
