@@ -105,6 +105,10 @@ Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
+Layout/SpaceBeforeBrackets:
+  Enabled: true
+Lint/AmbiguousAssignment:
+  Enabled: true
 
 # ============================== Style ==============================
 Style/RescueModifier:
@@ -216,6 +220,8 @@ Style/NilLambda:
 Style/SwapValues:
   Enabled: true
 Style/RedundantArgument:
+  Enabled: true
+Style/HashExcept:
   Enabled: true
 
 # ============================== Lint ==============================
