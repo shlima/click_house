@@ -13,16 +13,15 @@ RSpec.describe ClickHouse::Extend::ConnectionExplaining do
     <<~TXT
       Expression (Projection)
         CreatingSets (Create sets before main query execution)
-          Expression (Before ORDER BY and SELECT)
+          Expression (Before ORDER BY)
             Join (JOIN)
               Expression (Before JOIN)
                 SettingQuotaAndLimits (Set limits and quota after reading from storage)
                   ReadFromStorage (TinyLog)
           CreatingSet (Create set for JOIN)
-            Expression (Projection)
-              Expression (Before ORDER BY and SELECT)
-                SettingQuotaAndLimits (Set limits and quota after reading from storage)
-                  ReadFromStorage (TinyLog)
+            Expression (Projection + Before ORDER BY)
+              SettingQuotaAndLimits (Set limits and quota after reading from storage)
+                ReadFromStorage (TinyLog)
     TXT
   end
 

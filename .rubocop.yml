@@ -223,6 +223,10 @@ Style/RedundantArgument:
   Enabled: true
 Style/HashExcept:
   Enabled: true
+Style/EndlessMethod:
+  Enabled: true
+Style/IfWithBooleanLiteralBranches:
+  Enabled: true
 
 # ============================== Lint ==============================
 Lint/DuplicateMethods:
@@ -292,4 +296,18 @@ Lint/ToEnumArguments:
 Lint/UnmodifiedReduceAccumulator:
   Enabled: true
 Lint/UnexpectedBlockArity:
+  Enabled: true
+Lint/DeprecatedConstants:
+  Enabled: true
+Lint/LambdaWithoutLiteralBlock:
+  Enabled: true
+Lint/NumberedParameterAssignment:
+  Enabled: true
+Lint/OrAssignmentToConstant:
+  Enabled: true
+Lint/RedundantDirGlobSort:
+  Enabled: true
+Lint/SymbolConversion:
+  Enabled: true
+Lint/TripleQuotes:
   Enabled: true
