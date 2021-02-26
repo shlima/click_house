@@ -8,7 +8,7 @@ jobs:
 
     services:
       clickhouse:
-        image: yandex/clickhouse-server:21.1.4
+        image: yandex/clickhouse-server:21.1.5
         ports: 
           - 8123:8123
 

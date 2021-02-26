@@ -13,9 +13,9 @@ AllCops:
 Bundler/OrderedGems:
   Enabled: false
 
-# ============================== Documentation ======================
-Style/Documentation:
-  Enabled: false
+# ============================== Gemspec ======================
+Gemspec/DateAssignment:
+  Enabled: true
 
 # =============================== Performance =======================
 Performance/AncestorsInclude:
@@ -227,6 +227,10 @@ Style/EndlessMethod:
   Enabled: true
 Style/IfWithBooleanLiteralBranches:
   Enabled: true
+Style/HashConversion:
+  Enabled: true
+Style/Documentation:
+  Enabled: false
 
 # ============================== Lint ==============================
 Lint/DuplicateMethods:
