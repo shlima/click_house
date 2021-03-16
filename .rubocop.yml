@@ -46,6 +46,10 @@ Performance/ConstantRegexp:
   Enabled: true
 Performance/MethodObjectAsBlock:
   Enabled: false
+Performance/RedundantEqualityComparisonBlock:
+  Enabled: true
+Performance/RedundantSplitRegexpArgument:
+  Enabled: true
 
 # ============================== Metrics ============================
 Metrics/ClassLength:
