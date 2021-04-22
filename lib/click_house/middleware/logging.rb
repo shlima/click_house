@@ -29,11 +29,8 @@ module ClickHouse
       # rubocop:disable Layout/LineLength
       def on_complete(env)
         summary = extract_summary(env.response_headers)
-        elapsed = duration
-        query = CGI.parse(env.url.query.to_s).dig('query', 0) || '[NO QUERY]'
-
-        logger.info("\e[1m[35mSQL (#{Util::Pretty.measure(elapsed)})\e[0m #{query};")
-        logger.debug(body) if body
+        logger.info("\e[1m[35mSQL (#{duration_stats_log(env.body)})\e[0m #{query(env)};")
+        logger.debug(body) if body && !query_in_body?(env)
         logger.info("\e[1m[36mRead: #{summary.fetch(:read_rows)} rows, #{summary.fetch(:read_bytes)}. Written: #{summary.fetch(:written_rows)} rows, #{summary.fetch(:written_bytes)}\e[0m")
       end
       # rubocop:enable Layout/LineLength
@@ -44,6 +41,28 @@ module ClickHouse
 
       def timestamp
         Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      end
+
+      def query_in_body?(env)
+        env.method == :get
+      end
+
+      def query(env)
+        if query_in_body?(env)
+          body
+        else
+          CGI.parse(env.url.query.to_s).dig('query', 0) || '[NO QUERY]'
+        end
+      end
+
+      def duration_stats_log(body)
+        elapsed = duration
+        clickhouse_elapsed = body['statistics'].fetch('elapsed') if body.is_a?(Hash) && body.key?('statistics')
+
+        [
+          "Total: #{Util::Pretty.measure(elapsed * 1000)}",
+          ("CH: #{Util::Pretty.measure(clickhouse_elapsed * 1000)}" if clickhouse_elapsed)
+        ].compact.join(', ')
       end
 
       def extract_summary(headers)
