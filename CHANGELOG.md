@@ -1,5 +1,8 @@
+# 1.5.0
+* add support for 'WITH TOTALS' modifier in response
+
 # 1.4.0
-* fizx decimal type casting [#11](https://github.com/shlima/click_house/issues/11)
+* fix decimal type casting [#11](https://github.com/shlima/click_house/issues/11)
 
 # 1.3.9
 * add `ClickHouse.connection.add_index`, `ClickHouse.connection.drop_index`
