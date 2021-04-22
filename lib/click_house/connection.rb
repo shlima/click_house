@@ -21,8 +21,18 @@ module ClickHouse
       post(body, query: { query: query }, database: database)
     end
 
-    def get(path = '/', query: {}, database: config.database)
-      transport.get(compose(path, query.merge(database: database)))
+    # @param path [String] Clickhouse HTTP endpoint, e.g. /ping, /replica_status
+    # @param query [String] SQL to run
+    # @param database [String|NilClass] database to use, nil to skip
+    # @param settings [Hash] other CH settings to send through params, e.g. max_rows_to_read=1
+    # @example get(query: 'select number from system.numbers limit 100', max_rows_to_read: 10)
+    # @return [Faraday::Response]
+    def get(path = '/', query: '', database: config.database, **settings)
+      transport.get(path) do |conn|
+        conn.params = settings.merge(database: database).compact
+        conn.params[:send_progress_in_http_headers] = 1 unless query.empty?
+        conn.body = query
+      end
     end
 
     def post(body = nil, query: {}, database: config.database)
