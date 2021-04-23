@@ -19,7 +19,7 @@ module ClickHouse
       # rubocop:enable all
 
       def measure(ms)
-        "#{ms.round}MS"
+        "#{ms.round}ms"
       end
 
       def squish(string)
