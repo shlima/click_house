@@ -51,6 +51,8 @@ module ClickHouse
       # @param totals [Array|Hash|NilClass] Support for 'GROUP BY WITH TOTALS' modifier
       #   https://clickhouse.tech/docs/en/sql-reference/statements/select/group-by/#with-totals-modifier
       #   Hash in JSON format and Array in JSONCompact
+      # @param statistics [Hash|NilClass] Stats about duration of query and number of rows
+      #   {"elapsed"=>0.0524, "rows_read"=>10, "bytes_read"=>80}
       def initialize(meta:, data:, totals: nil, statistics: nil)
         @meta = meta
         @data = data
@@ -59,23 +61,41 @@ module ClickHouse
       end
 
       def to_a
-        @to_a ||= data.each do |row|
-          row.each do |name, value|
-            casting = types.fetch(name)
-            row[name] = casting.fetch(:caster).cast(value, *casting.fetch(:arguments))
-          end
-        end
+        @to_a ||= data.each { |row| array_rows? ? type_cast_array_row(row) : type_cast_hash_row(row) }
       end
 
       def types
-        @types ||= meta.each_with_object({}) do |row, object|
+        @types ||= meta.each_with_object({}).with_index do |(row, object), index|
           type_name, argv = self.class.extract_type_info(row.fetch('type'))
+          object_key = array_rows? ? index : row.fetch('name')
 
-          object[row.fetch('name')] = {
-            caster: ClickHouse.types[type_name],
+          object[object_key] = {
+            caster:    ClickHouse.types[type_name],
             arguments: argv
           }
         end
+      end
+
+      private
+
+      def type_cast_hash_row(row)
+        row.each do |name, value|
+          casting = types.fetch(name)
+          row[name] = casting.fetch(:caster).cast(value, *casting.fetch(:arguments))
+        end
+      end
+
+      def type_cast_array_row(row)
+        row.each.with_index do |value, index|
+          casting = types.fetch(index)
+          row[index] = casting.fetch(:caster).cast(value, *casting.fetch(:arguments))
+        end
+      end
+
+      def array_rows?
+        return @array_rows if instance_variable_defined?(:@array_rows)
+
+        @array_rows = data.first.is_a?(Array)
       end
     end
   end
