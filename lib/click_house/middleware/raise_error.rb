@@ -16,9 +16,13 @@ module ClickHouse
       private
 
       def on_complete(env)
-        return if SUCCEED_STATUSES.include?(env.status)
+        return if SUCCEED_STATUSES.include?(env.status) && !error_in_body?(env.body)
 
         raise DbException, "[#{env.status}] #{env.body}"
+      end
+
+      def error_in_body?(body)
+        body.is_a?(String) && body.start_with?(/Code: \d+, e.displayText\(\) \= DB\:\:Exception\:/)
       end
     end
   end
