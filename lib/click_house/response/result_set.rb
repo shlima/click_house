@@ -48,10 +48,10 @@ module ClickHouse
 
       # @param meta [Array]
       # @param data [Array]
-      # @param totals [Array|Hash|NilClass] Support for 'GROUP BY WITH TOTALS' modifier
+      # @param totals [Array, Hash, NilClass] Support for 'GROUP BY WITH TOTALS' modifier
       #   https://clickhouse.tech/docs/en/sql-reference/statements/select/group-by/#with-totals-modifier
       #   Hash in JSON format and Array in JSONCompact
-      # @param statistics [Hash|NilClass] Stats about duration of query and number of rows
+      # @param statistics [Hash, NilClass] Stats about duration of query and number of rows
       #   {"elapsed"=>0.0524, "rows_read"=>10, "bytes_read"=>80}
       def initialize(meta:, data:, totals: nil, statistics: nil)
         @meta = meta

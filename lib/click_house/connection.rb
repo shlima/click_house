@@ -23,7 +23,7 @@ module ClickHouse
 
     # @param path [String] Clickhouse HTTP endpoint, e.g. /ping, /replica_status
     # @param body [String] SQL to run
-    # @param database [String|NilClass] database to use, nil to skip
+    # @param database [String, NilClass] database to use, nil to skip
     # @param query [Hash] other CH settings to send through params, e.g. max_rows_to_read=1
     # @example get(body: 'select number from system.numbers limit 100', query: { max_rows_to_read: 10 })
     # @return [Faraday::Response]
