@@ -56,10 +56,10 @@ module ClickHouse
       end
 
       def log_clickhouse_stats(body) # rubocop:disable Layout/LineLength
-        return unless body.is_a?(Hash) && body.key?('statistics')
+        return unless body.is_a?(Hash) && body.key?('statistics') && body.key?('rows')
 
         stats = body['statistics']
-        logger.info("\e[1m[36mElapsed: #{Util::Pretty.measure(stats.fetch('elapsed') * 1000)}. Read: #{stats.fetch('rows_read')} rows, #{Util::Pretty.size(stats.fetch('bytes_read'))}\e[0m")
+        logger.info("\e[1m[36m#{body['rows']} rows in set. Elapsed: #{Util::Pretty.measure(stats.fetch('elapsed') * 1000)}. Processed #{stats.fetch('rows_read')} rows, #{Util::Pretty.size(stats.fetch('bytes_read'))}\e[0m")
       end
     end
   end
