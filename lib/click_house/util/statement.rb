@@ -13,7 +13,7 @@ module ClickHouse
       end
 
       def format(sql, format)
-        return sql if sql.match?(/FORMAT/i)
+        return sql if sql.match?(/FORMAT \w+\z/i)
 
         "#{sql.sub(END_OF_STATEMENT_RE, '')} FORMAT #{format};"
       end
