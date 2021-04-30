@@ -36,7 +36,7 @@ module ClickHouse
       end
 
       transport.get(path) do |conn|
-        conn.params = query.merge(database: database).compact
+        conn.params = { database: database }.merge(query).compact
         conn.params[:query] = '' unless query.empty?
         conn.body = body
       end
