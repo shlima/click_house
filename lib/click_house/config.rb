@@ -49,11 +49,15 @@ module ClickHouse
     end
 
     def logger!
-      @logger || Logger.new(IO::NULL)
+      @logger || null_logger
     end
 
     def url!
       @url || "#{scheme}://#{host}:#{port}"
+    end
+
+    def null_logger
+      @null_logger ||= Logger.new(IO::NULL)
     end
   end
 end

@@ -22,16 +22,23 @@ module ClickHouse
     end
 
     # @param path [String] Clickhouse HTTP endpoint, e.g. /ping, /replica_status
-    # @param query [String] SQL to run
+    # @param body [String] SQL to run
     # @param database [String|NilClass] database to use, nil to skip
-    # @param settings [Hash] other CH settings to send through params, e.g. max_rows_to_read=1
-    # @example get(query: 'select number from system.numbers limit 100', max_rows_to_read: 10)
+    # @param query [Hash] other CH settings to send through params, e.g. max_rows_to_read=1
+    # @example get(body: 'select number from system.numbers limit 100', query: { max_rows_to_read: 10 })
     # @return [Faraday::Response]
-    def get(path = '/', query: '', database: config.database, **settings)
+    def get(path = '/', body: '', query: {}, database: config.database)
+      # backward compatibility since
+      # https://github.com/shlima/click_house/pull/12/files#diff-9c6f3f06d3b575731eae4b6b95ddbcdcc20452c432b8f6e87a3a8e8645818107R24
+      if query.is_a?(String)
+        query = { query: query }
+        config.logger!.warn('since v1.4.0 use connection.get(body: "SELECT 1") instead of connection.get(query: "SELECT 1")')
+      end
+
       transport.get(path) do |conn|
-        conn.params = settings.merge(database: database).compact
-        conn.params[:send_progress_in_http_headers] = 1 unless query.empty?
-        conn.body = query
+        conn.params = query.merge(database: database).compact
+        conn.params[:send_progress_in_http_headers] = 1 unless body.empty?
+        conn.body = body
       end
     end
 

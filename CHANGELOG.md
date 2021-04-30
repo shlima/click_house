@@ -1,5 +1,7 @@
 # 1.5.0
 * add support for 'WITH TOTALS' modifier in response
+* send SQL in GET request's body [#12](https://github.com/shlima/click_house/pull/12)
+* add support of 'WITH TOTALS' on a resulting set
 
 # 1.4.0
 * fix decimal type casting [#11](https://github.com/shlima/click_house/issues/11)

@@ -6,9 +6,11 @@ module ClickHouse
       EXPLAIN = 'EXPLAIN'
       EXPLAIN_RE = /\A(\s*#{EXPLAIN})/io.freeze
 
-      def explain(sql, io: $stdout)
+      # @return String
+      def explain(sql, io: StringIO.new)
         res = execute("#{EXPLAIN} #{sql.gsub(EXPLAIN_RE, '')}")
-        io << res.body
+        io.puts(res.body)
+        io.string
       end
     end
   end
