@@ -50,6 +50,8 @@ Performance/RedundantEqualityComparisonBlock:
   Enabled: true
 Performance/RedundantSplitRegexpArgument:
   Enabled: true
+Performance/MapCompact:
+  Enabled: true
 
 # ============================== Metrics ============================
 Metrics/ClassLength:
@@ -73,6 +75,8 @@ Naming/MethodParameterName:
   Enabled: false
 Naming/AccessorMethodName:
   Enabled: false
+Naming/InclusiveLanguage:
+  Enabled: true
 
 # ============================== Layout =============================
 Layout/LineLength:
@@ -111,7 +115,7 @@ Layout/SpaceAroundMethodCallOperator:
   Enabled: true
 Layout/SpaceBeforeBrackets:
   Enabled: true
-Lint/AmbiguousAssignment:
+Layout/LineEndStringConcatenationIndentation:
   Enabled: true
 
 # ============================== Style ==============================
@@ -235,6 +239,14 @@ Style/HashConversion:
   Enabled: true
 Style/Documentation:
   Enabled: false
+Style/InPatternThen:
+  Enabled: true
+Style/MultilineInPatternThen:
+  Enabled: true
+Style/QuotedSymbols:
+  Enabled: true
+Style/StringChars:
+  Enabled: true
 
 # ============================== Lint ==============================
 Lint/DuplicateMethods:
@@ -318,4 +330,8 @@ Lint/RedundantDirGlobSort:
 Lint/SymbolConversion:
   Enabled: true
 Lint/TripleQuotes:
+  Enabled: true
+Lint/AmbiguousAssignment:
+  Enabled: true
+Lint/EmptyInPattern:
   Enabled: true
