@@ -43,7 +43,6 @@ RSpec.describe ClickHouse::Config do
 
       it 'is true' do
         expect(subject.auth?).to eq(true)
-        expect(ClickHouse.connection.select_one('SELECT * FROM rspec')).to eq('tags' => ['Be1rger King', "McDonald’s"])
       end
     end
   end
