@@ -4,7 +4,7 @@ module ClickHouse
   module Type
     class IntegerType < BaseType
       def cast(value)
-        Integer(value)
+        Integer(value) unless value.nil?
       end
 
       def serialize(value)

@@ -4,7 +4,7 @@ module ClickHouse
   module Type
     class FloatType < BaseType
       def cast(value)
-        Float(value)
+        Float(value) unless value.nil?
       end
 
       def serialize(value)
