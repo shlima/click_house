@@ -41,7 +41,7 @@ RSpec.describe ClickHouse::Config do
         subject.password = 'bar'
       end
 
-      it 'is false' do
+      it 'is true' do
         expect(subject.auth?).to eq(true)
       end
     end
