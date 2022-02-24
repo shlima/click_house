@@ -17,8 +17,8 @@ module ClickHouse
       @config = config
     end
 
-    def execute(query, body = nil, database: config.database)
-      post(body, query: { query: query }, database: database)
+    def execute(query, body = nil, database: config.database, params: {})
+      post(body, query: { query: query }, database: database, params: config.global_params.merge(params))
     end
 
     # @param path [String] Clickhouse HTTP endpoint, e.g. /ping, /replica_status
@@ -42,8 +42,8 @@ module ClickHouse
       end
     end
 
-    def post(body = nil, query: {}, database: config.database)
-      transport.post(compose('/', query.merge(database: database)), body)
+    def post(body = nil, query: {}, database: config.database, params: {})
+      transport.post(compose('/', query.merge(database: database, **params)), body)
     end
 
     def transport
