@@ -10,8 +10,8 @@
 gem install click_house
 ```
 
-A modern Ruby database driver for ClickHouse. [ClickHouse](https://clickhouse.yandex) 
-is a high-performance column-oriented database management system developed by 
+A modern Ruby database driver for ClickHouse. [ClickHouse](https://clickhouse.yandex)
+is a high-performance column-oriented database management system developed by
 [Yandex](https://yandex.com/company) which operates Russia's most popular search engine.
 
 > This development was inspired by currently [unmaintainable alternative](https://github.com/archan937/clickhouse)
@@ -24,7 +24,7 @@ Well, the developers of ClickHouse themselves [discourage](https://github.com/ya
 > TCP transport is more specific, we don't want to expose details.
 Despite we have full compatibility of protocol of different versions of client and server, we want to keep the ability to "break" it for very old clients. And that protocol is not too clean to make a specification.
 
-Yandex uses HTTP interface for working from Java and Perl, Python and Go as well as shell scripts. 
+Yandex uses HTTP interface for working from Java and Perl, Python and Go as well as shell scripts.
 
 # TOC
 
@@ -53,15 +53,18 @@ ClickHouse.config do |config|
   config.open_timeout = 3
   config.ssl_verify = false
   config.headers = {}
-  
+
   # or provide connection options separately
-  config.scheme = 'http' 
-  config.host = 'localhost' 
-  config.port = 'port' 
-  
+  config.scheme = 'http'
+  config.host = 'localhost'
+  config.port = 'port'
+
   # if you use HTTP basic Auth
-  config.username = 'user' 
-  config.password = 'password' 
+  config.username = 'user'
+  config.password = 'password'
+
+  # if you want to add settings to all queries
+  config.global_params = { mutations_sync: 1 }
 end
 ```
 
@@ -76,7 +79,7 @@ Now you are able to communicate with ClickHouse:
 ```ruby
 ClickHouse.connection.ping #=> true
 ```
-You can easily build a new raw connection and override any configuration parameter 
+You can easily build a new raw connection and override any configuration parameter
 (such as database name, connection address)
 
 ```ruby
@@ -126,8 +129,8 @@ Select all type-casted result set
 @result.to_a #=> [{"date"=>#<Date: 2000-01-01>, "id"=>1}]
 
 # you can access raw data
-@result.meta #=> [{"name"=>"date", "type"=>"Date"}, {"name"=>"id", "type"=>"UInt32"}] 
-@result.data #=> [{"date"=>"2000-01-01", "id"=>1}, {"date"=>"2000-01-02", "id"=>2}] 
+@result.meta #=> [{"name"=>"date", "type"=>"Date"}, {"name"=>"id", "type"=>"UInt32"}]
+@result.data #=> [{"date"=>"2000-01-01", "id"=>1}, {"date"=>"2000-01-02", "id"=>2}]
 @result.statistics #=> {"elapsed"=>0.0002271, "rows_read"=>2, "bytes_read"=>12}
 ```
 
@@ -182,7 +185,7 @@ response = ClickHouse.connection.execute <<~SQL
   SELECT count(*) AS counter FROM rspec FORMAT RowBinary
 SQL
 
-response.body #=> "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000" 
+response.body #=> "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
 ```
 
 ## Insert
@@ -193,7 +196,7 @@ When column names and values are transferred separately
 ClickHouse.connection.insert('table', columns: %i[id name]) do |buffer|
   buffer << [1, 'Mercury']
   buffer << [2, 'Venus']
-end 
+end
 
 ClickHouse.connection.insert('table', columns: %i[id name], values: [[1, 'Mercury'], [2, 'Venus']])
 #=> true
@@ -272,7 +275,7 @@ end
 ### Set table options
 
 ```ruby
-ClickHouse.connection.create_table('visits', 
+ClickHouse.connection.create_table('visits',
   order: 'year',
   ttl: 'date + INTERVAL 1 DAY',
   sample: 'year',
@@ -308,24 +311,24 @@ ClickHouse.connection.modify_column('table', 'column_name', type: :UInt64, defau
 ClickHouse.connection.alter_table('table', 'DROP COLUMN user_id', cluster: nil)
 
 # By SQL in a block
-ClickHouse.connection.alter_table('table', cluster: nil) do 
+ClickHouse.connection.alter_table('table', cluster: nil) do
   <<~SQL
     MOVE PART '20190301_14343_16206_438' TO VOLUME 'slow'
-  SQL  
+  SQL
 end
 ```
 
 ## Type casting
 
 By default gem provides all necessary type casting, but you may overwrite or define
-your own logic 
+your own logic
 
 ```ruby
 class DateType
   def cast(value)
     Date.parse(value)
-  end 
-  
+  end
+
   def serialize(value)
     value.strftime('%Y-%m-%d')
   end
@@ -338,7 +341,7 @@ Actually `serialize` function is not used for now, but you may use it manually:
 
 ```ruby
 time_type = ClickHouse::Type::DateTimeType.new
-string_type = ClickHouse::Type::FixedStringType.new 
+string_type = ClickHouse::Type::FixedStringType.new
 
 ClickHouse.connection.insert('table', columns: %i[name time]) do |buffer|
   buffer << [string_type.serialize('a' * 1000, 20), time_type.serialize(Time.current, 'Europe/Moscow')]
@@ -353,20 +356,20 @@ data = @records.map do |record|
 end
 ```
 
-If native type supports arguments, define *String* type with `%s` 
+If native type supports arguments, define *String* type with `%s`
 argument and *Numeric* type with `%d` argument:
 
 ```ruby
 class DateTimeType
   def cast(value, time_zone)
     Time.parse("#{value} #{time_zone}")
-  end 
+  end
 end
 
 ClickHouse.add_type('DateTime(%s)', DateTimeType.new)
 ```
 
-if you need to redefine all built-in types with your implementation, 
+if you need to redefine all built-in types with your implementation,
 just clear the default type system:
 
 ```ruby
@@ -406,7 +409,7 @@ development:
 test:
   database: ecliptic_test
   <<: *default
-  
+
 production:
   <<: *default
   database: ecliptic_production
@@ -418,7 +421,7 @@ production:
 ClickHouse.config do |config|
   config.logger = Rails.logger
   config.assign(Rails.application.config_for('click_house'))
-end 
+end
 ```
 
 ```ruby
@@ -465,7 +468,7 @@ class CreateAdvertVisits < ActiveRecord::Migration[6.0]
     end
   end
 
-  def down    
+  def down
     ClickHouse.connection.drop_table('visits')
   end
 end
@@ -509,7 +512,7 @@ end
 ````
 
 ````ruby
-# FAKE MODEL FOR ClickHouse 
+# FAKE MODEL FOR ClickHouse
 class Visit < ClickHouseRecord
   scope :with_os, -> { where.not(os_family_id: nil) }
 end
@@ -517,12 +520,12 @@ end
 Visit.with_os.select('COUNT(*) as counter').group(:ipv4).select_all
 #=> [{ 'ipv4' => 1455869, 'counter' => 104 }]
 
-Visit.with_os.select('COUNT(*)').select_value 
+Visit.with_os.select('COUNT(*)').select_value
 #=> 20_345_678
- 
-Visit.where(user_id: 1).select_one 
-#=> { 'ipv4' => 1455869, 'user_id' => 1 }  
-```` 
+
+Visit.where(user_id: 1).select_one
+#=> { 'ipv4' => 1455869, 'user_id' => 1 }
+````
 
 ## Using with RSpec
 
@@ -537,7 +540,7 @@ end
 ```
 
 ```ruby
-RSpec.describe Api::MetricsCountroller, truncate_click_house: true do 
+RSpec.describe Api::MetricsCountroller, truncate_click_house: true do
   it { }
   it { }
 end
