@@ -1,3 +1,6 @@
+# 1.6.1
+* [PR](https://github.com/shlima/click_house/pull/26) call logging middleware when an error is raised
+
 # 1.6.0
 * [PR](https://github.com/shlima/click_house/pull/19) handle value returned as nil in float and integer types (case of Aggregate Function Combinators) 
 * [PR](https://github.com/shlima/click_house/pull/18) Fix Faraday deprecation
