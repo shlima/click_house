@@ -14,7 +14,7 @@ module ClickHouse
                      :inspect, :each, :fetch, :length, :count, :size,
                      :first, :last, :[], :to_h
 
-      attr_reader :meta, :data, :totals, :statistics
+      attr_reader :meta, :data, :totals, :statistics, :rows_before_limit_at_least
 
       class << self
         # @return [Array<String, Array>]
@@ -51,10 +51,11 @@ module ClickHouse
       # @param totals [Array|Hash|NilClass] Support for 'GROUP BY WITH TOTALS' modifier
       #   https://clickhouse.tech/docs/en/sql-reference/statements/select/group-by/#with-totals-modifier
       #   Hash in JSON format and Array in JSONCompact
-      def initialize(meta:, data:, totals: nil, statistics: nil)
+      def initialize(meta:, data:, totals: nil, statistics: nil, rows_before_limit_at_least: nil)
         @meta = meta
         @data = data
         @totals = totals
+        @rows_before_limit_at_least = rows_before_limit_at_least
         @statistics = Hash(statistics)
       end
 

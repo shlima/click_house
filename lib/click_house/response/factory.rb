@@ -14,7 +14,8 @@ module ClickHouse
           meta: body.fetch('meta'),
           data: body.fetch('data'),
           totals: body['totals'],
-          statistics: body['statistics']
+          statistics: body['statistics'],
+          rows_before_limit_at_least: body['rows_before_limit_at_least']
         )
       end
     end
