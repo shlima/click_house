@@ -55,7 +55,7 @@ module ClickHouse
         conn.request(:basic_auth, config.username, config.password) if config.auth?
         conn.response Middleware::RaiseError
         conn.response Middleware::Logging, logger: config.logger!
-        conn.response :json, content_type: %r{application/json}
+        conn.response :json
         conn.response Middleware::ParseCsv, content_type: %r{text/csv}
         conn.adapter config.adapter
       end
