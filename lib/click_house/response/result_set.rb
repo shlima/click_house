@@ -54,7 +54,7 @@ module ClickHouse
       def initialize(meta:, data:, totals: nil, statistics: nil, rows_before_limit_at_least: nil)
         @meta = meta
         @data = data
-        @totals = totals || rows_before_limit_at_least
+        @totals = totals
         @rows_before_limit_at_least = rows_before_limit_at_least
         @statistics = Hash(statistics)
       end
