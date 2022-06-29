@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    click_house (1.6.1)
+    click_house (1.6.2)
       faraday (>= 1.7)
       faraday_middleware
 
@@ -27,8 +27,8 @@ GEM
     faraday-em_synchrony (1.0.0)
     faraday-excon (1.1.0)
     faraday-httpclient (1.0.1)
-    faraday-multipart (1.0.3)
-      multipart-post (>= 1.2, < 3)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
     faraday-net_http (1.0.1)
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
@@ -37,7 +37,7 @@ GEM
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
     method_source (1.0.0)
-    multipart-post (2.1.1)
+    multipart-post (2.2.3)
     parallel (1.22.1)
     parser (3.1.1.0)
       ast (~> 2.4.1)

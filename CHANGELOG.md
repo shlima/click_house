@@ -1,3 +1,7 @@
+# 1.6.2
+* [PR](https://github.com/shlima/click_house/pull/31) Add rows_before_limit_at_least to ResultSet
+* [PR](https://github.com/shlima/click_house/pull/29) Force JSON format by using "default_format" instead of modifying the query
+
 # 1.6.1
 * [PR](https://github.com/shlima/click_house/pull/26) call logging middleware when an error is raised
 
