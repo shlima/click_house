@@ -5,14 +5,22 @@ RSpec.describe ClickHouse::Response::Factory do
 
   describe 'WITH totals modifier' do
     context 'when blank' do
+      let(:response) do
+        subject.select_all('SELECT 1')
+      end
+
       it 'is empty' do
-        expect(subject.select_all('SELECT 1').totals).to eq(nil)
+        expect(response.totals).to eq(nil)
       end
     end
 
     context 'when exists' do
+      let(:response) do
+        subject.select_all('SELECT SUM(1) AS s WITH TOTALS')
+      end
+
       it 'is present' do
-        expect(subject.select_all('SELECT SUM(1) AS s WITH TOTALS').totals).to eq({ 's' => '1' })
+        expect(response.totals).to eq({ 's' => '1' })
       end
     end
   end

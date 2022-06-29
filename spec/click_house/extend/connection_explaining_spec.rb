@@ -11,14 +11,12 @@ RSpec.describe ClickHouse::Extend::ConnectionExplaining do
 
   let(:expectation) do
     <<~TXT
-       Expression ((Projection + Before ORDER BY))
-         Join (JOIN)
-           Expression (Before JOIN)
-             SettingQuotaAndLimits (Set limits and quota after reading from storage)
-               ReadFromStorage (TinyLog)
-           Expression ((Joined actions + (Rename joined columns + (Projection + Before ORDER BY))))
-             SettingQuotaAndLimits (Set limits and quota after reading from storage)
-               ReadFromStorage (TinyLog)
+      Expression ((Projection + Before ORDER BY))
+        Join (JOIN)
+          Expression (Before JOIN)
+            ReadFromStorage (TinyLog)
+          Expression ((Joined actions + (Rename joined columns + (Projection + Before ORDER BY))))
+            ReadFromStorage (TinyLog)
     TXT
   end
 
@@ -33,7 +31,7 @@ RSpec.describe ClickHouse::Extend::ConnectionExplaining do
   context 'when EXPLAIN query' do
     it 'works' do
       buffer = StringIO.new
-      subject.explain(' explain SELECT 1 FROM rspec CROSS JOIN rspec', io: buffer)
+      subject.explain('EXPLAIN SELECT 1 FROM rspec CROSS JOIN rspec', io: buffer)
       expect(buffer.string).to eq(expectation)
     end
   end
