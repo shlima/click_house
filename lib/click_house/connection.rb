@@ -51,11 +51,12 @@ module ClickHouse
         conn.options.timeout = config.timeout
         conn.options.open_timeout = config.open_timeout
         conn.headers = config.headers
-        conn.ssl.verify = config.ssl_verify
+        conn.ssl.verify = config.ssl_verify 
+        conn.request :json
         conn.request(:basic_auth, config.username, config.password) if config.auth?
         conn.response Middleware::RaiseError
         conn.response Middleware::Logging, logger: config.logger!
-        conn.response :json
+        conn.response Middleware::ParseJson 
         conn.response Middleware::ParseCsv, content_type: %r{text/csv}
         conn.adapter config.adapter
       end
