@@ -13,9 +13,8 @@ module ClickHouse
       end
 
       define_parser do |body, parser_options|
-        ::JSON.parse(body,  parser_options || {}) if !body.strip.empty? && body =~ /^\{/
+        ::JSON.parse(body, parser_options || {}) if !body.strip.empty? && body =~ /^\{/
       end
     end
   end
 end
-  
