@@ -53,9 +53,9 @@ module ClickHouse
         conn.headers = config.headers
         conn.ssl.verify = config.ssl_verify
         conn.request(:basic_auth, config.username, config.password) if config.auth?
+        conn.response :json, content_type: %r{application/json}
         conn.response Middleware::RaiseError
         conn.response Middleware::Logging, logger: config.logger!
-        conn.response :json, content_type: %r{application/json}
         conn.response Middleware::ParseCsv, content_type: %r{text/csv}
         conn.adapter config.adapter
       end

@@ -16,6 +16,11 @@ module ClickHouse
       private
 
       def on_complete(env)
+        # Valid since Clickhouse 22.6
+        if env.response_headers.key?('X-ClickHouse-Exception-Code')
+          raise DbException, env.body
+        end
+
         return if SUCCEED_STATUSES.include?(env.status)
 
         raise DbException, "[#{env.status}] #{env.body}"
