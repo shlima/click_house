@@ -20,6 +20,17 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
       expect(insert).to eq(true)
       expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
     end
+
+    context 'when string format' do
+      let(:insert) do
+        subject.insert('rspec', columns: %i[name id], values: [%w[Sun 1], %w[Moon 2]], format: 'JSONStringsEachRow')
+      end
+
+      it 'works' do
+        expect(insert).to eq(true)
+        expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
+      end
+    end
   end
 
   context 'when argument with columns' do

@@ -14,8 +14,8 @@ module ClickHouse
       # end
       #
       # == Example with a param
-      # subject.insert('rspec', values: [{ name: 'Sun', id: 1 }, { name: 'Moon', id: 2 }])
-      def insert(table, columns: [], values: [])
+      # subject.insert('rspec', values: [{ name: 'Sun', id: 1 }, { name: 'Moon', id: 2 }], format: 'JSONStringsEachRow')
+      def insert(table, columns: [], values: [], format: 'JSONEachRow')
         yield(values) if block_given?
 
         body = if columns.empty?
@@ -26,7 +26,7 @@ module ClickHouse
 
         return EMPTY_INSERT if values.empty?
 
-        execute("INSERT INTO #{table} FORMAT JSONEachRow", body.join("\n")).success?
+        execute("INSERT INTO #{table} FORMAT #{format}", body.join("\n")).success?
       end
     end
   end
