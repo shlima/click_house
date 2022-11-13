@@ -11,13 +11,8 @@ module ClickHouse
         @types ||= Hash.new(Type::UndefinedType.new)
       end
 
-      def add_type(type, klass, nullable: true, low_cardinality: false)
+      def add_type(type, klass, nullable: true)
         types[type] = klass
-
-        # if low_cardinality
-        #   types["#{LOW_CARDINALITY}(#{type})"] = Type::LowCardinalityType.new(klass)
-        # end
-
         types["#{NULLABLE}(#{type})"] = Type::NullableType.new(klass) if nullable
       end
 

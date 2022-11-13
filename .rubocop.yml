@@ -14,7 +14,9 @@ Bundler/OrderedGems:
   Enabled: false
 
 # ============================== Gemspec ======================
-Gemspec/DateAssignment:
+Gemspec/DeprecatedAttributeAssignment:
+  Enabled: true
+Gemspec/RequireMFA: # new in 1.23
   Enabled: true
 
 # =============================== Performance =======================
@@ -52,6 +54,10 @@ Performance/RedundantSplitRegexpArgument:
   Enabled: true
 Performance/MapCompact:
   Enabled: true
+Performance/ConcurrentMonotonicTime: # new in 1.12
+  Enabled: true
+Performance/StringIdentifierArgument: # new in 1.13
+  Enabled: true
 
 # ============================== Metrics ============================
 Metrics/ClassLength:
@@ -76,6 +82,8 @@ Naming/MethodParameterName:
 Naming/AccessorMethodName:
   Enabled: false
 Naming/InclusiveLanguage:
+  Enabled: true
+Naming/BlockForwarding: # new in 1.24
   Enabled: true
 
 # ============================== Layout =============================
@@ -116,6 +124,10 @@ Layout/SpaceAroundMethodCallOperator:
 Layout/SpaceBeforeBrackets:
   Enabled: true
 Layout/LineEndStringConcatenationIndentation:
+  Enabled: true
+Layout/LineContinuationLeadingSpace: # new in 1.31
+  Enabled: true
+Layout/LineContinuationSpacing: # new in 1.31
   Enabled: true
 
 # ============================== Style ==============================
@@ -247,6 +259,50 @@ Style/QuotedSymbols:
   Enabled: true
 Style/StringChars:
   Enabled: true
+Style/EmptyHeredoc: # new in 1.32
+  Enabled: true
+Style/EnvHome: # new in 1.29
+  Enabled: true
+Style/FetchEnvVar: # new in 1.28
+  Enabled: true
+Style/FileRead: # new in 1.24
+  Enabled: true
+Style/FileWrite: # new in 1.24
+  Enabled: true
+Style/MagicCommentFormat: # new in 1.35
+  Enabled: true
+Style/MapCompactWithConditionalBlock: # new in 1.30
+  Enabled: true
+Style/MapToHash: # new in 1.24
+  Enabled: true
+Style/NestedFileDirname: # new in 1.26
+  Enabled: true
+Style/NumberedParameters: # new in 1.22
+  Enabled: true
+Style/NumberedParametersLimit: # new in 1.22
+  Enabled: true
+Style/ObjectThen: # new in 1.28
+  Enabled: true
+Style/OpenStructUse: # new in 1.23
+  Enabled: true
+Style/OperatorMethodCall: # new in 1.37
+  Enabled: true
+Style/RedundantEach: # new in 1.38
+  Enabled: true
+Style/RedundantInitialize: # new in 1.27
+  Enabled: true
+Style/RedundantSelfAssignmentBranch: # new in 1.19
+  Enabled: true
+Style/RedundantStringEscape: # new in 1.37
+  Enabled: true
+Style/SelectByRegexp: # new in 1.22
+  Enabled: true
+
+# ============================== Security ==============================
+Security/CompoundHash: # new in 1.28
+  Enabled: true
+Security/IoMethods: # new in 1.22
+  Enabled: true
 
 # ============================== Lint ==============================
 Lint/DuplicateMethods:
@@ -334,4 +390,24 @@ Lint/TripleQuotes:
 Lint/AmbiguousAssignment:
   Enabled: true
 Lint/EmptyInPattern:
+  Enabled: true
+Lint/AmbiguousOperatorPrecedence: # new in 1.21
+  Enabled: true
+Lint/AmbiguousRange: # new in 1.19
+  Enabled: true
+Lint/ConstantOverwrittenInRescue: # new in 1.31
+  Enabled: true
+Lint/DuplicateMagicComment: # new in 1.37
+  Enabled: true
+Lint/IncompatibleIoSelectWithFiberScheduler: # new in 1.21
+  Enabled: true
+Lint/NonAtomicFileOperation: # new in 1.31
+  Enabled: true
+Lint/RefinementImportMethods: # new in 1.27
+  Enabled: true
+Lint/RequireRangeParentheses: # new in 1.32
+  Enabled: true
+Lint/RequireRelativeSelfPath: # new in 1.22
+  Enabled: true
+Lint/UselessRuby2Keywords: # new in 1.23
   Enabled: true

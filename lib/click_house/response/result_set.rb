@@ -10,8 +10,8 @@ module ClickHouse
       NULLABLE = 'Nullable'
       NULLABLE_TYPE_RE = /#{NULLABLE}\((.+)\)/i.freeze
       ARG_D_RE = /\A-?\d+\Z/.freeze
-      PLACEHOLDER_D = "%d"
-      PLACEHOLDER_S = "%s"
+      PLACEHOLDER_D = '%d'
+      PLACEHOLDER_S = '%s'
 
       def_delegators :to_a,
                      :inspect, :each, :fetch, :length, :count, :size,
