@@ -3,6 +3,7 @@
 * [PR](https://github.com/shlima/click_house/pull/34) Support X-ClickHouse-Exception-Code header
 * [ISSUE](https://github.com/shlima/click_house/issues/33) Fix parameterized types parsing
 * Added LowCardinality DDL support
+* Fixed body logging with POST queries
 
 # 1.6.2
 * [PR](https://github.com/shlima/click_house/pull/31) Add rows_before_limit_at_least to ResultSet

@@ -30,7 +30,7 @@ module ClickHouse
       def on_complete(env)
         summary = extract_summary(env.response_headers)
         logger.info("\e[1m[35mSQL (#{duration_stats_log(env.body)})\e[0m #{query(env)};")
-        logger.debug(body) if body && !query_in_body?(env)
+        logger.debug(body) if body
         logger.info("\e[1m[36mRead: #{summary.fetch(:read_rows)} rows, #{summary.fetch(:read_bytes)}. Written: #{summary.fetch(:written_rows)} rows, #{summary.fetch(:written_bytes)}\e[0m")
       end
       # rubocop:enable Layout/LineLength
