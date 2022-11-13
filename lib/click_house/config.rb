@@ -16,7 +16,20 @@ module ClickHouse
       open_timeout: nil,
       ssl_verify: false,
       headers: {},
-      global_params: {}
+      global_params: {},
+      json_parser: ClickHouse::Middleware::ParseJson,
+      oj_load_options: {
+        mode: :custom,
+        allow_blank: true,
+        bigdecimal_as_decimal: false, # dump BigDecimal as a String
+        bigdecimal_load: :bigdecimal, # convert all decimal numbers to BigDecimal
+        empty_string: false,
+        second_precision: 6,
+        time_format: :ruby,
+      },
+      json_load_options: {
+        decimal_class: BigDecimal,
+      },
     }.freeze
 
     attr_accessor :adapter
@@ -33,6 +46,9 @@ module ClickHouse
     attr_accessor :ssl_verify
     attr_accessor :headers
     attr_accessor :global_params
+    attr_accessor :oj_load_options
+    attr_accessor :json_load_options
+    attr_accessor :json_parser # response middleware
 
     def initialize(params = {})
       assign(DEFAULTS.merge(params))

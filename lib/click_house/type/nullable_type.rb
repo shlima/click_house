@@ -3,18 +3,16 @@
 module ClickHouse
   module Type
     class NullableType < BaseType
-      attr_reader :subtype
-
-      def initialize(subtype)
-        @subtype = subtype
+      def cast_each(value, *_argv)
+        yield(value) unless value.nil?
       end
 
-      def cast(*argv)
-        subtype.cast(*argv) unless argv.first.nil?
+      def container?
+        true
       end
 
-      def serialize(*argv)
-        subtype.serialize(*argv) unless argv.first.nil?
+      def ddl?
+        false
       end
     end
   end

@@ -46,6 +46,7 @@ module ClickHouse
       transport.post(compose('/', query.merge(database: database, **params)), body)
     end
 
+    # transport should work the same both with Faraday v1 and Faraday v2
     def transport
       @transport ||= Faraday.new(config.url!) do |conn|
         conn.options.timeout = config.timeout
@@ -53,10 +54,10 @@ module ClickHouse
         conn.headers = config.headers
         conn.ssl.verify = config.ssl_verify
         conn.request(:basic_auth, config.username, config.password) if config.auth?
-        conn.response :json, content_type: %r{application/json}
         conn.response Middleware::RaiseError
         conn.response Middleware::Logging, logger: config.logger!
-        conn.response Middleware::ParseCsv, content_type: %r{text/csv}
+        conn.response config.json_parser, content_type: %r{application/json}, parser_options: { config: config }
+        conn.response Middleware::ParseCsv, content_type: %r{text/csv}, parser_options: { config: config }
         conn.adapter config.adapter
       end
     end

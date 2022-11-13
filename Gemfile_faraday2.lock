@@ -72,7 +72,7 @@ GEM
     unicode-display_width (2.3.0)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-21
 
 DEPENDENCIES
   bundler
@@ -85,4 +85,4 @@ DEPENDENCIES
   rubocop-performance
 
 BUNDLED WITH
-   2.3.3
+   2.3.7

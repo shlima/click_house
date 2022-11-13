@@ -6,10 +6,6 @@ module ClickHouse
       extend Forwardable
       include Enumerable
 
-      TYPE_ARGV_DELIM = ','
-      NULLABLE = 'Nullable'
-      NULLABLE_TYPE_RE = /#{NULLABLE}\((.+)\)/i.freeze
-      ARG_D_RE = /\A-?\d+\Z/.freeze
       PLACEHOLDER_D = '%d'
       PLACEHOLDER_S = '%s'
 
@@ -18,38 +14,6 @@ module ClickHouse
                      :first, :last, :[], :to_h
 
       attr_reader :meta, :data, :totals, :statistics, :rows_before_limit_at_least
-
-      class << self
-        # @return [Array<String, Array>]
-        # * first element is name of "ClickHouse.types.keys"
-        # * second element is extra arguments that should to be passed to <cast> function
-        #
-        # @input "DateTime('Europe/Moscow')"
-        # @output "DateTime(%s)"
-        #
-        # @input "Nullable(Decimal(10, 5))"
-        # @output "Nullable(Decimal(%d, %d))"
-        #
-        # @input "Decimal(10, 5)"
-        # @output "Decimal(%d, %d)"
-        def extract_type_info(type)
-          type = type.gsub(NULLABLE_TYPE_RE, '\1')
-          nullable = Regexp.last_match(1)
-          argv = []
-
-          type = type.gsub(/\((.+)\)/, '')
-
-          if (match = Regexp.last_match(1))
-            argv = match.split("#{TYPE_ARGV_DELIM} ")
-            placeholder = argv.map do |value|
-              value.match?(ARG_D_RE) ? PLACEHOLDER_D : PLACEHOLDER_S
-            end
-            type = "#{type}(#{placeholder.join("#{TYPE_ARGV_DELIM} ")})"
-          end
-
-          [nullable ? "#{NULLABLE}(#{type})" : type, argv]
-        end
-      end
 
       # @param meta [Array]
       # @param data [Array]
@@ -67,20 +31,69 @@ module ClickHouse
       def to_a
         @to_a ||= data.each do |row|
           row.each do |name, value|
-            casting = types.fetch(name)
-            row[name] = casting.fetch(:caster).cast(value, *casting.fetch(:arguments))
+            row[name] = cast_type(types.fetch(name), value)
           end
         end
       end
 
+      # @return [Hash<String, Ast::Statement>]
       def types
         @types ||= meta.each_with_object({}) do |row, object|
-          type_name, argv = self.class.extract_type_info(row.fetch('type'))
+          object[row.fetch('name')] = begin
+            current = Ast::Parser.new(row.fetch('type')).parse
+            assign_type(current)
+            current
+          end
+        end
+      end
 
-          object[row.fetch('name')] = {
-            caster: ClickHouse.types[type_name],
-            arguments: argv
-          }
+      private
+
+      # @param stmt [Ast::Statement]
+      def assign_type(stmt)
+        stmt.caster = ClickHouse.types[stmt.name]
+
+        if stmt.caster.is_a?(Type::UndefinedType)
+          placeholders = stmt.arguments.map(&:placeholder)
+          stmt.caster = ClickHouse.types["#{stmt.name}(#{placeholders.join(', ')})"]
+        end
+
+        stmt.arguments.each(&method(:assign_type))
+      end
+
+      # @param stmt [Ast::Statement]
+      def cast_type(stmt, value)
+        return cast_container(stmt, value) if stmt.caster.container?
+        return cast_map(stmt, Hash(value)) if stmt.caster.map?
+        return cast_tuple(stmt, Array(value)) if stmt.caster.tuple?
+
+        stmt.caster.cast(value, *stmt.arguments.map(&:value))
+      end
+
+      # @return [Hash]
+      # @param stmt [Ast::Statement]
+      # @param hash [Hash]
+      def cast_map(stmt, hash)
+        raise ArgumentError, "expect hash got #{hash.class}" unless hash.is_a?(Hash)
+
+        key_type, value_type = stmt.arguments
+        hash.each_with_object({}) do |(key, value), object|
+          object[cast_type(key_type, key)] = cast_type(value_type, value)
+        end
+      end
+
+      # @param stmt [Ast::Statement]
+      def cast_container(stmt, value)
+        stmt.caster.cast_each(value) do |item|
+          # TODO: raise an error if multiple arguments
+          cast_type(stmt.arguments.first, item)
+        end
+      end
+
+      # @param stmt [Ast::Statement]
+      def cast_tuple(stmt, value)
+        value.map.with_index do |item, ix|
+          cast_type(stmt.arguments.fetch(ix), item)
         end
       end
     end

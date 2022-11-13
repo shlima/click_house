@@ -14,6 +14,8 @@ module ClickHouse
     autoload :DecimalType, 'click_house/type/decimal_type'
     autoload :FixedStringType, 'click_house/type/fixed_string_type'
     autoload :ArrayType, 'click_house/type/array_type'
+    autoload :TupleType, 'click_house/type/tuple_type'
+    autoload :MapType, 'click_house/type/map_type'
     autoload :StringType, 'click_house/type/string_type'
     autoload :IPType, 'click_house/type/ip_type'
     autoload :LowCardinalityType, 'click_house/type/low_cardinality_type'

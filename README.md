@@ -337,25 +337,6 @@ end
 ClickHouse.add_type('Date', DateType.new)
 ```
 
-Actually `serialize` function is not used for now, but you may use it manually:
-
-```ruby
-time_type = ClickHouse::Type::DateTimeType.new
-string_type = ClickHouse::Type::FixedStringType.new
-
-ClickHouse.connection.insert('table', columns: %i[name time]) do |buffer|
-  buffer << [string_type.serialize('a' * 1000, 20), time_type.serialize(Time.current, 'Europe/Moscow')]
-end
-
-## alternatively
-data = @records.map do |record|
-  {
-    id: record.id,
-    time: ClickHouse.types['DateTime(%s)'].serialize(Time.current)
-  }
-end
-```
-
 If native type supports arguments, define *String* type with `%s`
 argument and *Numeric* type with `%d` argument:
 

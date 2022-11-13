@@ -3,7 +3,7 @@
 module ClickHouse
   module Type
     class StringType < BaseType
-      def cast(value)
+      def cast(value, *)
         value.to_s unless value.nil?
       end
 

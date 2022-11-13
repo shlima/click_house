@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby-version: [3.1, '3.0', 2.7, 2.6]
+        ruby-version: [3.1, '3.0', 2.7]
 
     steps:
       - uses: actions/checkout@v2
@@ -23,10 +23,21 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true # 'bundle install' and cache
 
-      - name: Run tests
-        run: bundle exec rspec
+      - name: Setup v1
+        run: make faraday1 bundle
+
+      - name: Setup v2
+        run: make faraday2 bundle
+
+      - name: Run tests with faraday v.1 JSON
+        run: make faraday1 rspec
+      - name: Run tests with faraday v.2 JSON
+        run: make faraday2 rspec
+      - name: Run tests with faraday v.1 OJ
+        run: make faraday1 oj rspec
+      - name: Run tests with faraday v.2 OJ
+        run: make faraday2 oj rspec
 
   rubocop:
     runs-on: ubuntu-latest

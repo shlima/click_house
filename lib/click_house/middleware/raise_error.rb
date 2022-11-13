@@ -3,28 +3,22 @@
 module ClickHouse
   module Middleware
     class RaiseError < Faraday::Middleware
-      SUCCEED_STATUSES = (200..299).freeze
       EXCEPTION_CODE_HEADER = 'x-clickhouse-exception-code'
 
       Faraday::Response.register_middleware self => self
 
-      def call(environment)
-        @app.call(environment).on_complete(&method(:on_complete))
+      # @param env [Faraday::Env]
+      def call(env)
+        super
       rescue Faraday::ConnectionFailed => e
         raise NetworkException, e.message, e.backtrace
       end
 
-      private
-
+      # @param env [Faraday::Env]
       def on_complete(env)
-        # Valid since Clickhouse 22.6
-        if env.response_headers.key?(EXCEPTION_CODE_HEADER)
-          raise DbException, env.body
+        if env.response_headers.include?(EXCEPTION_CODE_HEADER) || !env.success?
+          raise DbException, "[#{env.status}] #{env.body}"
         end
-
-        return if SUCCEED_STATUSES.include?(env.status)
-
-        raise DbException, "[#{env.status}] #{env.body}"
       end
     end
   end

@@ -2,12 +2,8 @@
 
 module ClickHouse
   module Type
-    class ArrayType < BaseType
-      def cast_each(value, *_argv, &block)
-        value.map(&block)
-      end
-
-      def container?
+    class MapType < BaseType
+      def map?
         true
       end
 

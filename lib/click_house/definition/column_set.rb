@@ -3,7 +3,9 @@
 module ClickHouse
   module Definition
     class ColumnSet
-      TYPES = ClickHouse.type_names(nullable: false).map { |s| s.sub('%s', "'%s'") }.freeze
+      TYPES = ClickHouse.types.each_with_object([]) do |(name, type), object|
+        object << name.sub('%s', "'%s'") if type.ddl?
+      end
 
       class << self
         # @input "DateTime('%s')"
@@ -15,7 +17,6 @@ module ClickHouse
 
       TYPES.each do |type|
         method_name = method_name_for_type(type)
-
         # t.Decimal :customer_id, nullable: true, default: ''
         # t.Decimal :money, 1, 2, nullable: true, default: ''
         class_eval <<-METHODS, __FILE__, __LINE__ + 1

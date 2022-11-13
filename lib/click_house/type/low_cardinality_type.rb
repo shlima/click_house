@@ -3,18 +3,12 @@
 module ClickHouse
   module Type
     class LowCardinalityType < BaseType
-      attr_reader :subtype
-
-      def initialize(subtype)
-        @subtype = subtype
+      def cast_each(value, *_argv)
+        yield(value) unless value.nil?
       end
 
-      def cast(*argv)
-        subtype.cast(*argv)
-      end
-
-      def serialize(*argv)
-        subtype.serialize(*argv)
+      def container?
+        true
       end
     end
   end

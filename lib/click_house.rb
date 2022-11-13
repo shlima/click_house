@@ -8,13 +8,14 @@ require 'logger'
 require 'faraday'
 require 'forwardable'
 require 'bigdecimal'
-require 'faraday_middleware'
+require 'active_support/core_ext/time/calculations'
 require 'click_house/version'
 require 'click_house/errors'
 require 'click_house/response'
 require 'click_house/type'
 require 'click_house/middleware'
 require 'click_house/extend'
+require 'click_house/ast'
 require 'click_house/util'
 require 'click_house/definition'
 
@@ -25,6 +26,12 @@ module ClickHouse
 
   autoload :Config, 'click_house/config'
   autoload :Connection, 'click_house/connection'
+
+  add_type 'Array', Type::ArrayType.new
+  add_type 'Nullable', Type::NullableType.new
+  add_type 'Map', Type::MapType.new
+  add_type 'LowCardinality', Type::LowCardinalityType.new
+  add_type 'Tuple', Type::TupleType.new
 
   %w[Date].each do |column|
     add_type column, Type::DateType.new
@@ -42,7 +49,7 @@ module ClickHouse
     add_type column, Type::DateTime64Type.new
   end
 
-  ['Decimal(%d, %d)', 'Decimal32(%d)', 'Decimal64(%d)', 'Decimal128(%d)'].each do |column|
+  ['Decimal(%d, %d)', 'Decimal32(%d)', 'Decimal64(%d)', 'Decimal128(%d)', 'Decimal256(%d)'].each do |column|
     add_type column, Type::DecimalType.new
   end
 

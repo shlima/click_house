@@ -2,14 +2,20 @@
 
 module ClickHouse
   module Middleware
-    class ParseCsv < ResponseBase
+    class ParseJsonOj < ResponseBase
       Faraday::Response.register_middleware self => self
 
       # @param env [Faraday::Env]
       def on_complete(env)
         return unless content_type?(env, content_type)
 
-        env.body = env.body.strip.empty? ? nil : CSV.parse(env.body)
+        env.body = Oj.load(env.body, config.oj_load_options) unless env.body.strip.empty?
+      end
+
+      private
+
+      def on_setup
+        require 'oj' unless defined?(Oj)
       end
     end
   end
