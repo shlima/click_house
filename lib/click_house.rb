@@ -38,7 +38,7 @@ module ClickHouse
     add_type column, Type::DateTimeType.new
   end
 
-  ['DateTime64(%d, %s)'].each do |column|
+  ['DateTime64(%d)', 'DateTime64(%d, %s)'].each do |column|
     add_type column, Type::DateTime64Type.new
   end
 

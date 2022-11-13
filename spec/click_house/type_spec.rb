@@ -201,4 +201,37 @@ RSpec.describe ClickHouse::Type do
       end
     end
   end
+
+  # @refs https://github.com/shlima/click_house/issues/33
+  context 'many parameterized types do nt parse properly' do
+    before do
+      subject.execute <<~SQL
+        CREATE TABLE rspec(
+            a DateTime
+            , b Nullable(DateTime)
+            , c DateTime64(3)
+            , d Nullable(DateTime64(3))
+            , e DateTime64(3, 'UTC')
+            , f Nullable(DateTime64(3, 'UTC'))
+            , g Decimal(10,2)
+         ) ENGINE TinyLog
+      SQL
+
+      subject.execute <<~SQL
+        insert into rspec values (now(), now(), now(), now(), now(), now(), 5.99);
+      SQL
+    end
+
+    it 'works' do
+      got = subject.select_one('SELECT * FROM rspec')
+      expect(got.fetch('a')).to be_a(DateTime)
+      expect(got.fetch('b')).to be_a(DateTime)
+      expect(got.fetch('c')).to be_a(DateTime)
+      expect(got.fetch('d')).to be_a(DateTime)
+      expect(got.fetch('e')).to be_a(DateTime)
+      expect(got.fetch('f')).to be_a(DateTime)
+      expect(got.fetch('g')).to be_a(BigDecimal)
+    end
+  end
 end
+

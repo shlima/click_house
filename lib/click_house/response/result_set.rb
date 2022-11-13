@@ -9,6 +9,9 @@ module ClickHouse
       TYPE_ARGV_DELIM = ','
       NULLABLE = 'Nullable'
       NULLABLE_TYPE_RE = /#{NULLABLE}\((.+)\)/i.freeze
+      ARG_D_RE = /\A-?\d+\Z/.freeze
+      PLACEHOLDER_D = "%d"
+      PLACEHOLDER_S = "%s"
 
       def_delegators :to_a,
                      :inspect, :each, :fetch, :length, :count, :size,
@@ -25,10 +28,10 @@ module ClickHouse
         # @output "DateTime(%s)"
         #
         # @input "Nullable(Decimal(10, 5))"
-        # @output "Nullable(Decimal(%s, %s))"
+        # @output "Nullable(Decimal(%d, %d))"
         #
         # @input "Decimal(10, 5)"
-        # @output "Decimal(%s, %s)"
+        # @output "Decimal(%d, %d)"
         def extract_type_info(type)
           type = type.gsub(NULLABLE_TYPE_RE, '\1')
           nullable = Regexp.last_match(1)
@@ -37,9 +40,11 @@ module ClickHouse
           type = type.gsub(/\((.+)\)/, '')
 
           if (match = Regexp.last_match(1))
-            counter = Array.new(match.count(TYPE_ARGV_DELIM).next) { '%s' }
-            type = "#{type}(#{counter.join("#{TYPE_ARGV_DELIM} ")})"
             argv = match.split("#{TYPE_ARGV_DELIM} ")
+            placeholder = argv.map do |value|
+              value.match?(ARG_D_RE) ? PLACEHOLDER_D : PLACEHOLDER_S
+            end
+            type = "#{type}(#{placeholder.join("#{TYPE_ARGV_DELIM} ")})"
           end
 
           [nullable ? "#{NULLABLE}(#{type})" : type, argv]

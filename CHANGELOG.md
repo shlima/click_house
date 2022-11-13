@@ -1,6 +1,7 @@
 # 1.6.3
 * [PR](https://github.com/shlima/click_house/pull/38) Add option format for insert
 * [PR](https://github.com/shlima/click_house/pull/34) Support X-ClickHouse-Exception-Code header
+* [ISSUE](https://github.com/shlima/click_house/issues/33) Fix parameterized types parsing
 * Added LowCardinality DDL support
 
 # 1.6.2
