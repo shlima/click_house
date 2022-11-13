@@ -13,7 +13,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
     context 'when exists' do
       before do
         subject.execute <<~SQL
-          CREATE TABLE rspec (date Date, id UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+          CREATE TABLE rspec (date Date, id UInt32) ENGINE TinyLog
         SQL
       end
 
@@ -33,7 +33,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
     context 'when exists' do
       before do
         subject.execute <<~SQL
-          CREATE TABLE rspec (date Date, id UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+          CREATE TABLE rspec (date Date, id UInt32) ENGINE TinyLog
         SQL
       end
 
@@ -51,7 +51,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
             date Date,
             id UInt32,
             json Nested (uid UInt32)
-          ) ENGINE = MergeTree(date, (id, date), 8192)
+          ) ENGINE TinyLog
         SQL
       end
 
@@ -91,7 +91,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
     context 'when default' do
       before do
         subject.execute <<~SQL
-          CREATE TABLE rspec (date Date, id UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+          CREATE TABLE rspec (date Date, id UInt32) ENGINE TinyLog
         SQL
       end
 
@@ -185,7 +185,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
   describe '#create_table' do
     context 'when column options' do
       before do
-        subject.create_table('rspec', engine: 'MergeTree(date, (year, date), 8192)') do |t|
+        subject.create_table('rspec', engine: 'MergeTree()', order: 'date') do |t|
           t.UInt16      :id, 16, default: 0, ttl: 'date + INTERVAL 1 DAY'
           t.UInt16      :year
           t.IPv4        :ipv4
@@ -233,7 +233,7 @@ RSpec.describe ClickHouse::Extend::ConnectionTable do
           sample: 'year',
           settings: 'index_granularity=8192',
           primary_key: 'year',
-          engine: 'MergeTree') do |t|
+          engine: 'MergeTree()') do |t|
           t.UInt16  :year
           t.Date    :date
         end

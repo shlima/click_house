@@ -12,7 +12,7 @@ RSpec.describe ClickHouse::Extend::ConnectionExplaining do
   let(:expectation) do
     <<~TXT
       Expression ((Projection + Before ORDER BY))
-        Join (JOIN)
+        Join (JOIN FillRightFirst)
           Expression (Before JOIN)
             ReadFromStorage (TinyLog)
           Expression ((Joined actions + (Rename joined columns + (Projection + Before ORDER BY))))

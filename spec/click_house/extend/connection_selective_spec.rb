@@ -40,7 +40,7 @@ RSpec.describe ClickHouse::Extend::ConnectionSelective do
   describe '#select_all' do
     before do
       subject.execute <<~SQL
-        CREATE TABLE rspec (date Date, id UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+        CREATE TABLE rspec (date Date, id UInt32) ENGINE TinyLog
       SQL
 
       subject.execute <<~SQL

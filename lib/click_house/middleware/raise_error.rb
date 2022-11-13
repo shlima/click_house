@@ -4,6 +4,7 @@ module ClickHouse
   module Middleware
     class RaiseError < Faraday::Middleware
       SUCCEED_STATUSES = (200..299).freeze
+      EXCEPTION_CODE_HEADER = 'x-clickhouse-exception-code'
 
       Faraday::Response.register_middleware self => self
 
@@ -17,7 +18,7 @@ module ClickHouse
 
       def on_complete(env)
         # Valid since Clickhouse 22.6
-        if env.response_headers.key?('X-ClickHouse-Exception-Code')
+        if env.response_headers.key?(EXCEPTION_CODE_HEADER)
           raise DbException, env.body
         end
 

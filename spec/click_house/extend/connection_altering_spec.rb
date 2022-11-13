@@ -6,7 +6,7 @@ RSpec.describe ClickHouse::Extend::ConnectionAltering do
   describe '#add_column' do
     before do
       subject.execute <<~SQL
-        CREATE TABLE rspec (date Date, id UInt32, user_id UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+        CREATE TABLE rspec (date Date, id UInt32, user_id UInt32) ENGINE MergeTree() ORDER BY date
       SQL
     end
 
@@ -50,7 +50,7 @@ RSpec.describe ClickHouse::Extend::ConnectionAltering do
   describe '#drop_column' do
     before do
       subject.execute <<~SQL
-        CREATE TABLE rspec (date Date, id UInt32, int_1 UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+        CREATE TABLE rspec (date Date, id UInt32, int_1 UInt32) ENGINE MergeTree() ORDER BY date
       SQL
     end
 
@@ -88,7 +88,7 @@ RSpec.describe ClickHouse::Extend::ConnectionAltering do
   describe '#modify_column' do
     before do
       subject.execute <<~SQL
-        CREATE TABLE rspec (date Date, id UInt32, int_1 UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+        CREATE TABLE rspec (date Date, id UInt32, int_1 UInt32) ENGINE MergeTree() ORDER BY date
       SQL
     end
 
@@ -130,7 +130,7 @@ RSpec.describe ClickHouse::Extend::ConnectionAltering do
   describe '#alter_table' do
     before do
       subject.execute <<~SQL
-        CREATE TABLE rspec (date Date, id UInt32, int_1 UInt32) ENGINE = MergeTree(date, (id, date), 8192)
+        CREATE TABLE rspec (date Date, id UInt32, int_1 UInt32) ENGINE MergeTree() ORDER BY date
       SQL
     end
 
