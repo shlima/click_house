@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    click_house (1.6.2)
+    click_house (1.7.0)
       faraday (>= 1.7)
       faraday_middleware
 
