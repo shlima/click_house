@@ -5,13 +5,19 @@ module ClickHouse
     module TypeDefinition
       NULLABLE = 'Nullable'
       NULLABLE_RE = /#{NULLABLE}/i.freeze
+      LOW_CARDINALITY = 'LowCardinality'
 
       def types
         @types ||= Hash.new(Type::UndefinedType.new)
       end
 
-      def add_type(type, klass, nullable: true)
+      def add_type(type, klass, nullable: true, low_cardinality: false)
         types[type] = klass
+
+        # if low_cardinality
+        #   types["#{LOW_CARDINALITY}(#{type})"] = Type::LowCardinalityType.new(klass)
+        # end
+
         types["#{NULLABLE}(#{type})"] = Type::NullableType.new(klass) if nullable
       end
 

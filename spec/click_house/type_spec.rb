@@ -42,6 +42,38 @@ RSpec.describe ClickHouse::Type do
     end
   end
 
+  context 'when NULLABLE LowCardinality' do
+    before do
+      subject.execute <<~SQL
+        CREATE TABLE rspec(int LowCardinality(Nullable(Float64))) ENGINE TinyLog;
+      SQL
+
+      subject.execute <<~SQL
+        INSERT INTO rspec VALUES (NULL), (1.1)
+      SQL
+    end
+
+    context 'when values exists' do
+      let(:expectation) do
+        { 'int' => 1.1 }
+      end
+
+      it 'works' do
+        expect(subject.select_one('SELECT * FROM rspec WHERE int IS NOT NULL')).to eq(expectation)
+      end
+    end
+
+    context 'when values empty' do
+      let(:expectation) do
+        { 'int' => nil }
+      end
+
+      it 'works' do
+        expect(subject.select_one('SELECT * FROM rspec WHERE int IS NULL')).to eq(expectation)
+      end
+    end
+  end
+
   context 'when NULLABLE Date' do
     before do
       subject.execute <<~SQL

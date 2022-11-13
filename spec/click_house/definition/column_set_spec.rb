@@ -7,6 +7,8 @@ RSpec.describe ClickHouse::Definition::ColumnSet do
     subject do
       described_class.new do |t|
         t.Decimal :money, 5, 5
+        t.UInt16  :year_birth, low_cardinality: true
+        t.UInt16  :year_death, low_cardinality: true, nullable: true, default: 0
         t.Float32 :city_id, default: 0, nullable: true
         t.Nested :json do |n|
           n.UInt8 :cid, nullable: true
@@ -23,6 +25,8 @@ RSpec.describe ClickHouse::Definition::ColumnSet do
       <<~SQL
         ( 
           money Decimal(5, 5), 
+          year_birth LowCardinality(UInt16), 
+          year_death LowCardinality(Nullable(UInt16)) DEFAULT 0,
           city_id Nullable(Float32) DEFAULT 0, 
           json Nested ( 
                         cid Nullable(UInt8) , 

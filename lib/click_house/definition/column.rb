@@ -6,6 +6,7 @@ module ClickHouse
       attr_accessor :name
       attr_accessor :type
       attr_accessor :nullable
+      attr_accessor :low_cardinality
       attr_accessor :extensions
       attr_accessor :default
       attr_accessor :materialized
@@ -17,10 +18,12 @@ module ClickHouse
       end
 
       def to_s
-        nullable ? "#{name} Nullable(#{extension_type}) #{opts}" : "#{name} #{extension_type} #{opts}"
-      end
+        type = extension_type
+        type = "Nullable(#{type})" if nullable
+        type = "LowCardinality(#{type})" if low_cardinality
 
-      private
+        "#{name} #{type} #{opts}"
+      end
 
       def opts
         options = {

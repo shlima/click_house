@@ -16,5 +16,6 @@ module ClickHouse
     autoload :ArrayType, 'click_house/type/array_type'
     autoload :StringType, 'click_house/type/string_type'
     autoload :IPType, 'click_house/type/ip_type'
+    autoload :LowCardinalityType, 'click_house/type/low_cardinality_type'
   end
 end

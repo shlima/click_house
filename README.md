@@ -221,7 +221,7 @@ end
 ```ruby
 ClickHouse.connection.create_table('visits', if_not_exists: true, engine: 'MergeTree(date, (year, date), 8192)') do |t|
   t.FixedString :id, 16
-  t.UInt16      :year
+  t.UInt16      :year, low_cardinality: true
   t.Date        :date
   t.DateTime    :time, 'UTC'
   t.Decimal     :money, 5, 4

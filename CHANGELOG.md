@@ -1,3 +1,8 @@
+# 1.6.3
+* [PR](https://github.com/shlima/click_house/pull/38) Add option format for insert
+* [PR](https://github.com/shlima/click_house/pull/34) Support X-ClickHouse-Exception-Code header
+* Added LowCardinality DDL support
+
 # 1.6.2
 * [PR](https://github.com/shlima/click_house/pull/31) Add rows_before_limit_at_least to ResultSet
 * [PR](https://github.com/shlima/click_house/pull/29) Force JSON format by using "default_format" instead of modifying the query
