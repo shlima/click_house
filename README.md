@@ -65,6 +65,11 @@ ClickHouse.config do |config|
 
   # if you want to add settings to all queries
   config.global_params = { mutations_sync: 1 }
+  
+  # choose a ruby JSON parser
+  config.json_parser = ClickHouse::Middleware::ParseJson
+  # or Oj parser
+  config.json_parser = ClickHouse::Middleware::ParseJsonOj
 end
 ```
 

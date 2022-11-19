@@ -1,3 +1,11 @@
+# 2.0.0
+* Fixed `Bigdecimal` casting with high precision
+* Added nested `type casting like Array(Array(Array(Nullable(T))))`
+* Added `Map(T1, T2)` support
+* Added `Tuple(T1, T2)` support
+* Added support for `Faraday` v1 and v2
+* Added support for `Oj` parser
+
 # 1.6.3
 * [PR](https://github.com/shlima/click_house/pull/38) Add option format for insert
 * [PR](https://github.com/shlima/click_house/pull/34) Support X-ClickHouse-Exception-Code header
