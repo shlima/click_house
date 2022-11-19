@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    click_house (2.0.1)
+    click_house (2.0.2)
       activesupport
       faraday (>= 1.7, < 3)
 
