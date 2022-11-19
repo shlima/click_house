@@ -15,7 +15,6 @@ module ClickHouse
       def initialize(name: '')
         @buffer = ''
         @name = name
-        @opened = false
       end
 
       # @param value [String]
