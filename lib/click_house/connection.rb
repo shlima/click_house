@@ -47,13 +47,22 @@ module ClickHouse
     end
 
     # transport should work the same both with Faraday v1 and Faraday v2
+    # rubocop:disable Metrics/AbcSize
     def transport
       @transport ||= Faraday.new(config.url!) do |conn|
         conn.options.timeout = config.timeout
         conn.options.open_timeout = config.open_timeout
         conn.headers = config.headers
         conn.ssl.verify = config.ssl_verify
-        conn.request(:basic_auth, config.username, config.password) if config.auth?
+
+        if config.auth?
+          if faraday_v1?
+            conn.request :basic_auth, config.username, config.password
+          else
+            conn.request :authorization, :basic, config.username, config.password
+          end
+        end
+
         conn.response Middleware::RaiseError
         conn.response Middleware::Logging, logger: config.logger!
         conn.response config.json_parser, content_type: %r{application/json}, parser_options: { config: config }
@@ -61,10 +70,16 @@ module ClickHouse
         conn.adapter config.adapter
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def compose(path, query = {})
       # without <query.compact> "DB::Exception: Empty query" error will occur
       "#{path}?#{URI.encode_www_form({ send_progress_in_http_headers: 1 }.merge(query).compact)}"
+    end
+
+    # @return [Boolean]
+    def faraday_v1?
+      Faraday::VERSION.start_with?('1')
     end
   end
 end
