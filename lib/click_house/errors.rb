@@ -5,4 +5,5 @@ module ClickHouse
   NetworkException = Class.new(Error)
   DbException = Class.new(Error)
   StatementException = Class.new(Error)
+  SerializeError = Class.new(Error)
 end

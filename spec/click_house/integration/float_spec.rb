@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Enum' do
+RSpec.describe ClickHouse::Type::FloatType do
   subject do
     ClickHouse.connection
   end
@@ -8,8 +8,9 @@ RSpec.describe 'Enum' do
   before do
     subject.execute <<~SQL
       CREATE TABLE rspec(
-         a Enum('foo' = 1, 'bar' = 2),
-         b Nullable(Enum('foo' = 1, 'bar' = 2))
+          a Float32,
+          b Float64,        
+          c Nullable(Float64)
        ) ENGINE Memory
     SQL
   end
@@ -18,24 +19,27 @@ RSpec.describe 'Enum' do
     before do
       subject.execute <<~SQL
         INSERT INTO rspec VALUES (
-          1, 
-          NULL
-        )
+            1.1,
+            2.2,
+            NULL
+        );
       SQL
     end
 
     it 'works' do
       got = subject.select_one('SELECT * FROM rspec')
-      expect(got.fetch('a')).to eq('foo')
-      expect(got.fetch('b')).to eq(nil)
+      expect(got.fetch('a')).to eq(1.1)
+      expect(got.fetch('b')).to eq(2.2)
+      expect(got.fetch('c')).to eq(nil)
     end
   end
 
   describe 'serialize' do
     let(:row) do
       {
-        'a' => 'foo',
-        'b' => nil,
+        'a' => 1.1,
+        'b' => 2.2,
+        'c' => nil,
       }
     end
 
@@ -43,8 +47,9 @@ RSpec.describe 'Enum' do
       subject.insert('rspec', subject.table_schema('rspec').serialize_one(row))
       got = subject.select_one('SELECT * FROM rspec')
 
-      expect(got.fetch('a')).to eq('foo')
-      expect(got.fetch('b')).to eq(nil)
+      expect(got.fetch('a')).to eq(row.fetch('a'))
+      expect(got.fetch('b')).to eq(row.fetch('b'))
+      expect(got.fetch('c')).to eq(row.fetch('c'))
     end
   end
 end

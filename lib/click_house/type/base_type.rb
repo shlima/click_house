@@ -11,6 +11,10 @@ module ClickHouse
         raise NotImplementedError, __method__
       end
 
+      def serialize_each(_value, *)
+        raise NotImplementedError, __method__
+      end
+
       # @return [Boolean]
       # true if type contains another type like Nullable(T) or Array(T)
       def container?

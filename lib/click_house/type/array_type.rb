@@ -7,6 +7,10 @@ module ClickHouse
         value.map(&block)
       end
 
+      def serialize_each(value, *_argv, &block)
+        value.map(&block)
+      end
+
       def container?
         true
       end

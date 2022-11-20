@@ -7,7 +7,7 @@ module ClickHouse
         value.to_s unless value.nil?
       end
 
-      def serialize(value)
+      def serialize(value, *)
         value.to_s unless value.nil?
       end
     end

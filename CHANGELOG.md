@@ -5,6 +5,7 @@
 * Added `Tuple(T1, T2)` support
 * Added support for `Faraday` v1 and v2
 * Added support for `Oj` parser
+* Time types return `Time` class instead of `DateTime` for now
 
 # 1.6.3
 * [PR](https://github.com/shlima/click_house/pull/38) Add option format for insert

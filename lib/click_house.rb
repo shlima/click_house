@@ -33,6 +33,10 @@ module ClickHouse
   add_type 'LowCardinality', Type::LowCardinalityType.new
   add_type 'Tuple', Type::TupleType.new
 
+  %w[Bool].each do |column|
+    add_type column, Type::BooleanType.new
+  end
+
   %w[Date].each do |column|
     add_type column, Type::DateType.new
   end

@@ -7,8 +7,94 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
 
   before do
     subject.execute <<~SQL
-      CREATE TABLE rspec(id Int64, name String, date Nullable(Date)) ENGINE TinyLog
+      CREATE TABLE rspec(id Int64, name Nullable(String)) ENGINE Memory
     SQL
+  end
+
+  def expected(insert, count)
+    expect(insert.written_rows).to eq(count)
+    expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(count)
+  end
+
+  context 'when blank' do
+    let(:insert) do
+      subject.insert('rspec')
+    end
+
+    it 'works' do
+      expected(insert, 0)
+    end
+  end
+
+  context 'when columns with blank values' do
+    let(:insert) do
+      subject.insert('rspec', columns: %i[id name])
+    end
+
+    it 'works' do
+      expected(insert, 0)
+    end
+  end
+
+  describe 'execution' do
+    let(:insert) do
+      subject.insert('rspec', values: {id: 1, name: 'foo'})
+    end
+
+    it 'has proper attributes' do
+      expect(insert.read_rows).to be > 0
+      expect(insert.read_bytes).to be > 0
+      expect(insert.written_rows).to be > 0
+      expect(insert.written_bytes).to be > 0
+      expect(insert.result_rows).to be > 0
+      expect(insert.result_bytes).to be > 0
+      expect(insert.summary).not_to be_empty
+      expect(insert.headers).not_to be_empty
+    end
+  end
+
+  context 'when body', if: ruby_version_gt('3') do
+    context 'when Hash' do
+      let(:insert) do
+        subject.insert('rspec', {id: 1, name: 'foo'})
+      end
+
+      it 'works' do
+        expected(insert, 1)
+      end
+    end
+
+    context 'when Array' do
+      let(:insert) do
+        subject.insert('rspec', [{id: 1, name: 'foo'}, {id: 1, name: 'foo'}])
+      end
+
+      it 'works' do
+        expected(insert, 2)
+      end
+    end
+  end
+
+  context 'when body', if: ruby_version_lt('3') do
+    context 'when Hash' do
+      let(:insert) do
+        subject.insert('rspec', {id: 1, name: 'foo'}, {})
+      end
+
+      it 'works' do
+        expected(insert, 1)
+      end
+    end
+
+    context 'when Array' do
+      let(:insert) do
+        subject.insert('rspec', [{id: 1, name: 'foo'}, {id: 1, name: 'foo'}], {})
+      end
+
+      it 'works' do
+        expected(insert, 2)
+      end
+    end
   end
 
   context 'when block with columns' do
@@ -17,18 +103,16 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
     end
 
     it 'works' do
-      expect(insert).to eq(true)
-      expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
+      expected(insert, 2)
     end
 
     context 'when string format' do
       let(:insert) do
-        subject.insert('rspec', columns: %i[name id], values: [%w[Sun 1], %w[Moon 2]], format: 'JSONStringsEachRow')
+        subject.insert('rspec', columns: %i[name id], values: [%w[Sun 1], %w[Moon 2]], format: 'JSONCompactStringsEachRow')
       end
 
       it 'works' do
-        expect(insert).to eq(true)
-        expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
+        expected(insert, 2)
       end
     end
   end
@@ -42,8 +126,7 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
     end
 
     it 'works' do
-      expect(insert).to eq(true)
-      expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
+      expected(insert, 2)
     end
   end
 
@@ -53,8 +136,7 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
     end
 
     it 'works' do
-      expect(insert).to eq(true)
-      expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
+      expected(insert, 2)
     end
   end
 
@@ -67,31 +149,7 @@ RSpec.describe ClickHouse::Extend::ConnectionInserting do
     end
 
     it 'works' do
-      expect(insert).to eq(true)
-      expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(2)
-    end
-  end
-
-  context 'when empty' do
-    let(:insert) do
-      subject.insert('rspec', columns: %i[id name], values: [])
-    end
-
-    it 'works' do
-      expect(insert).to eq(true)
-      expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(0)
-    end
-  end
-
-  context 'when nullable column' do
-    let(:insert) do
-      subject.insert('rspec', columns: %i[date id name], values: [[nil, 1, 'foo']])
-    end
-
-    it 'works' do
-      expect(insert).to eq(true)
-      expect(subject.select_value('SELECT COUNT(*) FROM rspec')).to eq(1)
+      expected(insert, 2)
     end
   end
 end
-

@@ -13,6 +13,11 @@ module ClickHouse
         Response::Factory[execute("DESCRIBE TABLE #{name} FORMAT JSON")]
       end
 
+      # @return [ResultSet]
+      def table_schema(name)
+        Response::Factory[execute("SELECT * FROM #{name} WHERE 1=0 FORMAT JSON")]
+      end
+
       # @return [Boolean]
       def table_exists?(name, temporary: false)
         sql = 'EXISTS %<temporary>s TABLE  %<name>s FORMAT CSV'

@@ -4,7 +4,7 @@ module ClickHouse
   module Response
     class Factory
       # @return [String, ResultSet]
-      # @params env [Faraday::Response]
+      # @params faraday [Faraday::Response]
       def self.[](faraday)
         body = faraday.body
 
@@ -17,6 +17,17 @@ module ClickHouse
           statistics: body['statistics'],
           rows_before_limit_at_least: body['rows_before_limit_at_least']
         )
+      end
+
+      # @return [Response::Execution]
+      # @params faraday [Faraday::Response]
+      def self.exec(faraday)
+        Execution.new(headers: faraday.headers)
+      end
+
+      # @return [Response::Execution]
+      def self.empty_exec
+        Execution.new
       end
     end
   end

@@ -7,7 +7,12 @@ module ClickHouse
       FALSE_VALUE = 0
 
       def cast(value)
-        value.to_i == TRUE_VALUE
+        case value
+        when TrueClass, FalseClass
+          value
+        else
+          value.to_i == TRUE_VALUE
+        end
       end
 
       def serialize(value)
