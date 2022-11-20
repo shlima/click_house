@@ -1,3 +1,13 @@
+# 2.1.0
+* `ClickHouse.connection.insert` now returns `ClickHouse::Response::Execution` objects
+  with methods `headers`, `summary`, `written_rows`, `written_bytes`, etc... 
+* `ClickHouse.connection.insert(columns: ["id"], values: [1])` now uses `JSONCompactEachRow` by default
+  (to increase JSON serialization speed)
+* Methods `insert_rows` and `insert_compact` added to `connection`
+* Added ability to pass object directly to insert like:
+  `ClickHouse.connection.insert("table", {id: 1})` or
+  `ClickHouse.connection.insert("table", [{id: 1})]` (for ruby < 3.0 use `ClickHouse.connection.insert("table", [{id: 1}], {})`)
+
 # 2.0.0
 * Fixed `Bigdecimal` casting with high precision
 * Added nested `type casting like Array(Array(Array(Nullable(T))))`
