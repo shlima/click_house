@@ -7,7 +7,7 @@
 * Added ability to pass object directly to insert like:
   `ClickHouse.connection.insert("table", {id: 1})` or
   `ClickHouse.connection.insert("table", [{id: 1})]` (for ruby < 3.0 use `ClickHouse.connection.insert("table", [{id: 1}], {})`)
-* 🔥Added type serialization, example below
+* 🔥 Added type serialization, example below:
 
 ```sql
 CREATE TABLE assets(visible Boolean, tags Array(Nullable(String))) ENGINE Memory
@@ -17,7 +17,7 @@ CREATE TABLE assets(visible Boolean, tags Array(Nullable(String))) ENGINE Memory
 @schema = ClickHouse.connection.table_schema('assets')
 
 # Json each row
-ClickHouse.connection.insert('assets', @schema.serialize(true, ['ruby']))
+ClickHouse.connection.insert('assets', @schema.serialize({'visible' => true, 'tags' => ['ruby']))
 
 # Json compact
 
