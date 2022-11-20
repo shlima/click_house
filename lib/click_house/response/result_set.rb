@@ -19,15 +19,24 @@ module ClickHouse
 
       attr_reader :config, :meta, :data, :summary
 
+      class << self
+        # @param config [Config]
+        # @return [ResultSet]
+        def raw(config:, data:, summary:)
+          new(config: config, data: data, to_a: data, meta: [], summary: summary)
+        end
+      end
+
       # @param config [Config]
       # @param meta [Array]
       # @param data [Array]
       # @param summary [Response::Summary]
-      def initialize(config:, meta:, data:, summary:)
+      def initialize(config:, meta:, data:, summary:, to_a: nil)
         @config = config
         @meta = meta
         @data = data
         @summary = summary
+        @to_a = to_a
       end
 
       # @return [Array, Hash]
