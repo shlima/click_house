@@ -43,9 +43,9 @@ RSpec.describe ClickHouse::Config do
     end
 
     it 'works' do
-      subject.insert('rspec', subject.table_schema('rspec').serialize_one(row))
-      got = subject.select_one('SELECT * FROM rspec')
+      subject.insert_rows('rspec', subject.table_schema('rspec').serialize_one(row))
 
+      got = subject.select_one('SELECT * FROM rspec')
       expect(got.fetch(:a)).to eq(row.fetch(:a))
     end
   end

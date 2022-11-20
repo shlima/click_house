@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    click_house (2.0.2)
+    click_house (2.1.0)
       activesupport
       faraday (>= 1.7, < 3)
 
@@ -92,6 +92,7 @@ GEM
     unicode-display_width (2.3.0)
 
 PLATFORMS
+  ruby
   x86_64-darwin-21
 
 DEPENDENCIES
