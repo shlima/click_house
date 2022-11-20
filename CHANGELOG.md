@@ -7,6 +7,9 @@
 * Added ability to pass object directly to insert like:
   `ClickHouse.connection.insert("table", {id: 1})` or
   `ClickHouse.connection.insert("table", [{id: 1})]` (for ruby < 3.0 use `ClickHouse.connection.insert("table", [{id: 1}], {})`)
+* 🔥Added type serialization, example below
+
+
 
 # 2.0.0
 * Fixed `Bigdecimal` casting with high precision

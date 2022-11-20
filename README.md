@@ -195,7 +195,8 @@ response.body #=> "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
 
 ## Insert
 
-When column names and values are transferred separately
+When column names and values are transferred separately, data transfers to the server
+using `JSONCompactEachRow` format by default.
 
 ```ruby
 ClickHouse.connection.insert('table', columns: %i[id name]) do |buffer|
@@ -203,22 +204,41 @@ ClickHouse.connection.insert('table', columns: %i[id name]) do |buffer|
   buffer << [2, 'Venus']
 end
 
+# or
 ClickHouse.connection.insert('table', columns: %i[id name], values: [[1, 'Mercury'], [2, 'Venus']])
-#=> true
 ```
 
-When rows are passed as a hash
-
+When rows are passed as an Array or Hash, data transfers to the server
+using `JSONEachRow` format by default.
 
 ```ruby
-ClickHouse.connection.insert('table', values: [{ name: 'Sun', id: 1 }, { name: 'Moon', id: 2 }])
+ClickHouse.connection.insert('table', [{ name: 'Sun', id: 1 }, { name: 'Moon', id: 2 }])
 
+# or
+ClickHouse.connection.insert('table', { name: 'Sun', id: 1 })
+
+# for ruby < 3.0 provide an extra argument
+ClickHouse.connection.insert('table', { name: 'Sun', id: 1 }, {})
+
+# or
 ClickHouse.connection.insert('table') do |buffer|
   buffer << { name: 'Sun', id: 1 }
   buffer << { name: 'Moon', id: 2 }
 end
-#=> true
 ```
+
+Sometimes it's needed to use other format than `JSONEachRow` For example if you want to send BigDecimal's 
+you could use `JSONStringsEachRow` format so string representation of BigDecimal will be parsed:
+
+```ruby
+ClickHouse.connection.insert('table', { name: 'Sun', id: '1' }, format: 'JSONStringsEachRow')
+# or
+ClickHouse.connection.insert_rows('table', { name: 'Sun', id: '1' }, format: 'JSONStringsEachRow')
+# or
+ClickHouse.connection.insert_compact('table', columns: %w[name id], values: %w[Sun 1], format: 'JSONCompactStringsEachRow')
+```
+
+See the [type casting](#type-casting) section to insert the data in a proper way.
 
 ## Create a table
 ### Create table using DSL
@@ -326,34 +346,7 @@ end
 ## Type casting
 
 By default gem provides all necessary type casting, but you may overwrite or define
-your own logic
-
-```ruby
-class DateType
-  def cast(value)
-    Date.parse(value)
-  end
-
-  def serialize(value)
-    value.strftime('%Y-%m-%d')
-  end
-end
-
-ClickHouse.add_type('Date', DateType.new)
-```
-
-If native type supports arguments, define *String* type with `%s`
-argument and *Numeric* type with `%d` argument:
-
-```ruby
-class DateTimeType
-  def cast(value, time_zone)
-    Time.parse("#{value} #{time_zone}")
-  end
-end
-
-ClickHouse.add_type('DateTime(%s)', DateTimeType.new)
-```
+your own logic.
 
 if you need to redefine all built-in types with your implementation,
 just clear the default type system:
@@ -361,7 +354,31 @@ just clear the default type system:
 ```ruby
 ClickHouse.types.clear
 ClickHouse.types # => {}
-ClickHouse.types.default #=> #<ClickHouse::Type::UndefinedType:0x00007fc1cfabd630>
+ClickHouse.types.default #=> #<ClickHouse::Type::UndefinedType>
+```
+
+Type casting works automatically when fetching data, when inserting data, you must serialize the types yourself
+
+```sql
+CREATE TABLE assets(
+  visible Boolean,
+  tags Array(Nullable(String))
+) ENGINE Memory
+```
+
+```ruby
+@schema = ClickHouse.connection.table_schema('assets')
+
+ClickHouse.connection.insert('assets', @schema.serialize(true, ['ruby']))
+
+# or
+
+ClickHouse.connection.insert('assets', columns: %w[visible tags]) do |buffer|
+  buffer << [
+    @schema.serialize_column("visible", true),
+    @schema.serialize_column("tags", ['ruby']),
+  ]
+end
 ```
 
 ## Using with a connection pool
