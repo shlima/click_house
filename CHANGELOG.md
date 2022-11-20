@@ -1,6 +1,7 @@
 # 2.1.1
 * Fix logging with symbolized keys JSON
 * Unknown formats return raw `Response::ResultSelt` like regular JSON query
+* Added methods `statistics`, `summary`, `headers` and `types` to `Response::ResultSet`
 
 # 2.1.0
 * `ClickHouse.connection.insert` now returns `ClickHouse::Response::Summary` object
