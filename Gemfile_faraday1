@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # lock faraday to v1
-gem 'faraday_middleware'
+gem 'faraday', '< 2'
 
 # Specify your gem's dependencies in click_house.gemspec
 gemspec

@@ -1,22 +1,22 @@
 RSpec.describe ClickHouse::Type::DecimalType do
-  describe '#serialize' do
-    let(:input) do
-      BigDecimal(10.fdiv(3), 0)
+  describe '#casr' do
+    context 'when String' do
+      it 'works' do
+        expect(subject.cast("1.0")).to eq(BigDecimal(1.0, 1))
+      end
     end
 
-    it 'works' do
-      expect(subject.serialize(input)).to be_a(Float)
-      expect(subject.serialize(input)).to eq(input.to_f)
-    end
-  end
-
-  describe '#cast' do
-    let(:input) do
-      1.0e-05
+    context 'when BigDecimal' do
+      it 'works' do
+        expect(subject.cast(BigDecimal(1))).to eq(BigDecimal(1))
+      end
     end
 
-    it 'works' do
-      expect(subject.cast(String(input))).to eq(input)
+    context 'when Float' do
+      it 'works' do
+        expect(subject.cast(1.0, 1)).to eq(BigDecimal(1.0, 1))
+        expect(subject.cast(1.0)).to eq(BigDecimal(1.0, ClickHouse::Type::DecimalType::MAXIMUM))
+      end
     end
   end
 end
