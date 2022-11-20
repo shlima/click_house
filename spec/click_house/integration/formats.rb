@@ -6,36 +6,54 @@ RSpec.describe ClickHouse::Extend::ConnectionSelective do
   end
 
   context 'when RowBinary' do
+    let(:query) do
+      'SELECT 1 FORMAT RowBinary'
+    end
+
     it '#select_one' do
-      got = subject.select_one('SELECT 1 FORMAT RowBinary')
+      got = subject.select_one(query)
       expect(got).to eq("\u0001")
     end
 
     it '#select_value' do
-      got = subject.select_value('SELECT 1 FORMAT RowBinary')
+      got = subject.select_value(query)
       expect(got).to eq("\u0001")
     end
 
     it '#summary' do
-      got = subject.select_all('SELECT 1 FORMAT RowBinary')
+      got = subject.select_all(query)
       expect(got.summary.read_rows).to eq(1)
+    end
+
+    it '#types' do
+      got = subject.select_all(query)
+      expect(got.types).to eq([])
     end
   end
 
-  context 'when CSB' do
+  context 'when CSV' do
+    let(:query) do
+      'SELECT 1 FORMAT CSV'
+    end
+
     it '#select_one' do
-      got = subject.select_one('SELECT 1 FORMAT CSV')
+      got = subject.select_one(query)
       expect(got).to eq(['1'])
     end
 
     it '#select_value' do
-      got = subject.select_value('SELECT 1 FORMAT CSV')
+      got = subject.select_value(query)
       expect(got).to eq('1')
     end
 
     it '#summary' do
-      got = subject.select_all('SELECT 1 FORMAT CSV')
+      got = subject.select_all(query)
       expect(got.summary.read_rows).to eq(1)
+    end
+
+    it '#types' do
+      got = subject.select_all(query)
+      expect(got.types).to eq([])
     end
   end
 end
