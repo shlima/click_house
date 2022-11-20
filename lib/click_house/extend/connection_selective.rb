@@ -11,7 +11,16 @@ module ClickHouse
 
       def select_value(sql)
         response = get(body: sql, query: { default_format: 'JSON' })
-        Array(Response::Factory.response(response, config).first).dig(0, -1)
+        got = Response::Factory.response(response, config).first
+
+        case got
+        when Hash
+          Array(got).dig(0, -1) # get a value of a first key for JSON format
+        when Array
+          got[0] # for CSV format
+        else
+          got # for RowBinary format
+        end
       end
 
       def select_one(sql)
