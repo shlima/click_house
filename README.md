@@ -195,7 +195,7 @@ response.body #=> "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
 
 ## Insert
 
-When column names and values are transferred separately, data transfers to the server
+When column names and values are transferred separately, data sends to the server 
 using `JSONCompactEachRow` format by default.
 
 ```ruby
@@ -208,7 +208,7 @@ end
 ClickHouse.connection.insert('table', columns: %i[id name], values: [[1, 'Mercury'], [2, 'Venus']])
 ```
 
-When rows are passed as an Array or Hash, data transfers to the server
+When rows are passed as an Array or a Hash, data sends to the server
 using `JSONEachRow` format by default.
 
 ```ruby
@@ -228,7 +228,7 @@ end
 ```
 
 Sometimes it's needed to use other format than `JSONEachRow` For example if you want to send BigDecimal's 
-you could use `JSONStringsEachRow` format so string representation of BigDecimal will be parsed:
+you could use `JSONStringsEachRow` format so string representation of `BigDecimal` will be parsed:
 
 ```ruby
 ClickHouse.connection.insert('table', { name: 'Sun', id: '1' }, format: 'JSONStringsEachRow')
@@ -346,9 +346,7 @@ end
 ## Type casting
 
 By default gem provides all necessary type casting, but you may overwrite or define
-your own logic.
-
-if you need to redefine all built-in types with your implementation,
+your own logic. if you need to redefine all built-in types with your implementation,
 just clear the default type system:
 
 ```ruby
@@ -360,18 +358,16 @@ ClickHouse.types.default #=> #<ClickHouse::Type::UndefinedType>
 Type casting works automatically when fetching data, when inserting data, you must serialize the types yourself
 
 ```sql
-CREATE TABLE assets(
-  visible Boolean,
-  tags Array(Nullable(String))
-) ENGINE Memory
+CREATE TABLE assets(visible Boolean, tags Array(Nullable(String))) ENGINE Memory
 ```
 
 ```ruby
 @schema = ClickHouse.connection.table_schema('assets')
 
+# Json each row
 ClickHouse.connection.insert('assets', @schema.serialize(true, ['ruby']))
 
-# or
+# Json compact
 
 ClickHouse.connection.insert('assets', columns: %w[visible tags]) do |buffer|
   buffer << [

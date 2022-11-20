@@ -9,7 +9,25 @@
   `ClickHouse.connection.insert("table", [{id: 1})]` (for ruby < 3.0 use `ClickHouse.connection.insert("table", [{id: 1}], {})`)
 * 🔥Added type serialization, example below
 
+```sql
+CREATE TABLE assets(visible Boolean, tags Array(Nullable(String))) ENGINE Memory
+```
 
+```ruby
+@schema = ClickHouse.connection.table_schema('assets')
+
+# Json each row
+ClickHouse.connection.insert('assets', @schema.serialize(true, ['ruby']))
+
+# Json compact
+
+ClickHouse.connection.insert('assets', columns: %w[visible tags]) do |buffer|
+  buffer << [
+    @schema.serialize_column("visible", true),
+    @schema.serialize_column("tags", ['ruby']),
+  ]
+end
+```
 
 # 2.0.0
 * Fixed `Bigdecimal` casting with high precision
