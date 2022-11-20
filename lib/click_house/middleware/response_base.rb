@@ -5,12 +5,12 @@ module ClickHouse
     class ResponseBase < Faraday::Middleware
       CONTENT_TYPE_HEADER = 'content-type'
 
-      attr_reader :parser_options
+      attr_reader :options
       attr_reader :content_type
 
-      def initialize(app = nil, parser_options: {}, content_type: nil, preserve_raw: false)
+      def initialize(app = nil, options: {}, content_type: nil, preserve_raw: false)
         super(app)
-        @parser_options = parser_options
+        @options = options
         @content_type = content_type
         @preserve_raw = preserve_raw
         on_setup
@@ -32,7 +32,7 @@ module ClickHouse
 
       # @return [Config]
       def config
-        parser_options.fetch(:config)
+        options.fetch(:config)
       end
 
       private

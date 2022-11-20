@@ -13,24 +13,22 @@ module ClickHouse
                      :inspect, :each, :fetch, :length, :count, :size,
                      :first, :last, :[], :to_h
 
-      attr_reader :config, :meta, :data, :totals, :statistics, :rows_before_limit_at_least
+      def_delegators :summary,
+                     :statistics, :headers,
+                     :totals, :rows_before_limit_at_least
+
+      attr_reader :config, :meta, :data, :summary
 
       # @param config [Config]
       # @param meta [Array]
       # @param data [Array]
-      # @param totals [Array|Hash|NilClass] Support for 'GROUP BY WITH TOTALS' modifier
-      #   https://clickhouse.tech/docs/en/sql-reference/statements/select/group-by/#with-totals-modifier
-      #   Hash in JSON format and Array in JSONCompact
-      # rubocop:disable Metrics/ParameterLists
-      def initialize(config:, meta:, data:, totals: nil, statistics: nil, rows_before_limit_at_least: nil)
+      # @param summary [Response::Summary]
+      def initialize(config:, meta:, data:, summary:)
         @config = config
         @meta = meta
         @data = data
-        @totals = totals
-        @rows_before_limit_at_least = rows_before_limit_at_least
-        @statistics = Hash(statistics)
+        @summary = summary
       end
-      # rubocop:enable Metrics/ParameterLists
 
       # @return [Array, Hash]
       # @param data [Array, Hash]

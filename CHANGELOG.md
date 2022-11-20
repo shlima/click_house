@@ -1,5 +1,5 @@
 # 2.1.0
-* `ClickHouse.connection.insert` now returns `ClickHouse::Response::Execution` objects
+* `ClickHouse.connection.insert` now returns `ClickHouse::Response::Summary` object
   with methods `headers`, `summary`, `written_rows`, `written_bytes`, etc... 
 * `ClickHouse.connection.insert(columns: ["id"], values: [1])` now uses `JSONCompactEachRow` by default
   (to increase JSON serialization speed)

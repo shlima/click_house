@@ -46,7 +46,7 @@ module ClickHouse
           return insert_compact(table, columns: columns, values: values, format: format)
         end
 
-        Response::Factory.empty_exec
+        Response::Factory.empty_exec(config)
       end
       # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 

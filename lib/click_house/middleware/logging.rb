@@ -5,35 +5,31 @@ module ClickHouse
     class Logging < Faraday::Middleware
       Faraday::Response.register_middleware self => self
 
-      SUMMARY_HEADER = 'x-clickhouse-summary'
+      EMPTY = ''
+      GET = :get
 
-      attr_reader :logger, :starting, :body
+      attr_reader :logger, :starting
 
       def initialize(app = nil, logger:)
         @logger = logger
         super(app)
       end
 
-      def call(environment)
+      def call(env)
         @starting = timestamp
-        @body = environment.body if log_body?
-        @app.call(environment).on_complete(&method(:on_complete))
-      end
-
-      private
-
-      def log_body?
-        logger.level == Logger::DEBUG
+        super
       end
 
       # rubocop:disable Layout/LineLength
       def on_complete(env)
-        summary = extract_summary(env.response_headers)
-        logger.info("\e[1m[35mSQL (#{duration_stats_log(env.body)})\e[0m #{query(env)};")
-        logger.debug(body) if body
-        logger.info("\e[1m[36mRead: #{summary.fetch(:read_rows)} rows, #{summary.fetch(:read_bytes)}. Written: #{summary.fetch(:written_rows)} rows, #{summary.fetch(:written_bytes)}\e[0m")
+        summary = SummaryMiddleware.extract(env)
+        logger.info("\e[1m[35mSQL (#{duration_stats_log(summary)})\e[0m #{query(env)};")
+        logger.debug(env.request_body) if log_body?(env)
+        logger.info("\e[1m[36mRead: #{summary.read_rows} rows, #{summary.read_bytes_pretty}. Written: #{summary.written_rows} rows, #{summary.written_bytes_pretty}\e[0m")
       end
       # rubocop:enable Layout/LineLength
+
+      private
 
       def duration
         timestamp - starting
@@ -43,37 +39,25 @@ module ClickHouse
         Process.clock_gettime(Process::CLOCK_MONOTONIC)
       end
 
-      def query_in_body?(env)
-        env.method == :get
+      # @return [Boolean]
+      def log_body?(env)
+        return unless logger.debug?
+        return if env.method == GET # GET queries logs body as a statement
+        return if env.request_body.nil? || env.request_body == EMPTY
+
+        true
       end
 
       def query(env)
-        if query_in_body?(env)
-          body
+        if env.method == GET
+          env.request_body
         else
-          CGI.parse(env.url.query.to_s).dig('query', 0) || '[NO QUERY]'
+          String(CGI.parse(env.url.query.to_s).dig('query', 0) || '[NO QUERY]').chomp
         end
       end
 
-      def duration_stats_log(body)
-        elapsed = duration
-        clickhouse_elapsed = body['statistics'].fetch('elapsed') if body.is_a?(Hash) && body.key?('statistics')
-
-        [
-          "Total: #{Util::Pretty.measure(elapsed * 1000)}",
-          ("CH: #{Util::Pretty.measure(clickhouse_elapsed * 1000)}" if clickhouse_elapsed)
-        ].compact.join(', ')
-      end
-
-      def extract_summary(headers)
-        JSON.parse(headers.fetch('x-clickhouse-summary', '{}')).tap do |summary|
-          summary[:read_rows] = summary['read_rows']
-          summary[:read_bytes] = Util::Pretty.size(summary['read_bytes'].to_i)
-          summary[:written_rows] = summary['written_rows']
-          summary[:written_bytes] = Util::Pretty.size(summary['written_bytes'].to_i)
-        end
-      rescue JSON::ParserError
-        {}
+      def duration_stats_log(summary)
+        "Total: #{Util::Pretty.measure(duration * 1000)}, CH: #{summary.elapsed_pretty}"
       end
     end
   end
