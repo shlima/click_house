@@ -32,6 +32,10 @@ RSpec.describe ClickHouse::Response::ResultSet do
     it 'errors if column missing' do
       expect { schema.serialize_column('foo', 'bar') }.to raise_error(ClickHouse::SerializeError)
     end
+
+    it 'errors if value has improper type' do
+      expect { schema.serialize_column('b', nil) }.to raise_error(ClickHouse::SerializeError)
+    end
   end
 
   describe '#serialize_one' do

@@ -373,7 +373,7 @@ CREATE TABLE assets(visible Boolean, tags Array(Nullable(String))) ENGINE Memory
 @schema = ClickHouse.connection.table_schema('assets')
 
 # Json each row
-ClickHouse.connection.insert('assets', @schema.serialize({'visible' => true, 'tags' => ['ruby']))
+ClickHouse.connection.insert('assets', @schema.serialize({'visible' => true, 'tags' => ['ruby']}))
 
 # Json compact
 ClickHouse.connection.insert('assets', columns: %w[visible tags]) do |buffer|

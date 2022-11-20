@@ -6,6 +6,9 @@ module ClickHouse
       extend Forwardable
       include Enumerable
 
+      KEY_META_NAME = 'name'
+      KEY_META_TYPE = 'type'
+
       def_delegators :to_a,
                      :inspect, :each, :fetch, :length, :count, :size,
                      :first, :last, :[], :to_h
@@ -47,10 +50,6 @@ module ClickHouse
       def serialize_one(row)
         row.each_with_object({}) do |(key, value), object|
           object[key] = serialize_column(key, value)
-        rescue KeyError => e
-          raise SerializeError, "field <#{key}> does not exists in table schema: #{types.keys.join(', ')}", e.backtrace
-        rescue StandardError => e
-          raise SerializeError, "failed to serialize <#{key}> with #{stmt}, #{e.class}, #{e.message}", e.backtrace
         end
       end
 
@@ -60,7 +59,9 @@ module ClickHouse
         stmt = types.fetch(name)
         serialize_type(stmt, value)
       rescue KeyError => e
-        raise SerializeError, "field <#{name}> does not exists in table schema: #{types.keys.join(', ')}", e.backtrace
+        raise SerializeError, "field <#{name}> does not exists in table schema: #{types}", e.backtrace
+      rescue StandardError => e
+        raise SerializeError, "failed to serialize <#{name}> with #{stmt}, #{e.class}, #{e.message}", e.backtrace
       end
 
       def to_a
@@ -74,11 +75,11 @@ module ClickHouse
       # @return [Hash<String, Ast::Statement>]
       def types
         @types ||= meta.each_with_object({}) do |row, object|
-          column = row.fetch(config.key('name'))
+          column = row.fetch(config.key(KEY_META_NAME))
           # make symbol keys, if config.symbolize_keys is true,
           # to be able to cast and serialize properly
           object[config.key(column)] = begin
-            current = Ast::Parser.new(row.fetch(config.key('type'))).parse
+            current = Ast::Parser.new(row.fetch(config.key(KEY_META_TYPE))).parse
             assign_type(current)
             current
           end
