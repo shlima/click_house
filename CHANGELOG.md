@@ -7,6 +7,8 @@
 * Added ability to pass object directly to insert like:
   `ClickHouse.connection.insert("table", {id: 1})` or
   `ClickHouse.connection.insert("table", [{id: 1})]` (for ruby < 3.0 use `ClickHouse.connection.insert("table", [{id: 1}], {})`)
+* 🔥 Added config option `json_serializer` (one of `ClickHouse::Serializer::JsonSerializer`, `ClickHouse::Serializer::JsonOjSerializer`)
+* 🔥 Added config option `symbolize_keys`
 * 🔥 Added type serialization, example below:
 
 ```sql

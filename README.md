@@ -52,6 +52,8 @@ ClickHouse.config do |config|
   config.timeout = 60
   config.open_timeout = 3
   config.ssl_verify = false
+  # set to true to symbolize keys for SELECT and INSERT statements (type casting)
+  config.symbolize_keys = false
   config.headers = {}
 
   # or provide connection options separately
@@ -70,6 +72,11 @@ ClickHouse.config do |config|
   config.json_parser = ClickHouse::Middleware::ParseJson
   # or Oj parser
   config.json_parser = ClickHouse::Middleware::ParseJsonOj
+
+  # JSON.dump (default one)
+  config.json_serializer = ClickHouse::Serializer::JsonSerializer
+  # or Oj.dump
+  config.json_serializer = ClickHouse::Serializer::JsonOjSerializer
 end
 ```
 

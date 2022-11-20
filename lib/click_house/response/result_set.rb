@@ -10,20 +10,24 @@ module ClickHouse
                      :inspect, :each, :fetch, :length, :count, :size,
                      :first, :last, :[], :to_h
 
-      attr_reader :meta, :data, :totals, :statistics, :rows_before_limit_at_least
+      attr_reader :config, :meta, :data, :totals, :statistics, :rows_before_limit_at_least
 
+      # @param config [Config]
       # @param meta [Array]
       # @param data [Array]
       # @param totals [Array|Hash|NilClass] Support for 'GROUP BY WITH TOTALS' modifier
       #   https://clickhouse.tech/docs/en/sql-reference/statements/select/group-by/#with-totals-modifier
       #   Hash in JSON format and Array in JSONCompact
-      def initialize(meta:, data:, totals: nil, statistics: nil, rows_before_limit_at_least: nil)
+      # rubocop:disable Metrics/ParameterLists
+      def initialize(config:, meta:, data:, totals: nil, statistics: nil, rows_before_limit_at_least: nil)
+        @config = config
         @meta = meta
         @data = data
         @totals = totals
         @rows_before_limit_at_least = rows_before_limit_at_least
         @statistics = Hash(statistics)
       end
+      # rubocop:enable Metrics/ParameterLists
 
       # @return [Array, Hash]
       # @param data [Array, Hash]
@@ -70,8 +74,11 @@ module ClickHouse
       # @return [Hash<String, Ast::Statement>]
       def types
         @types ||= meta.each_with_object({}) do |row, object|
-          object[row.fetch('name')] = begin
-            current = Ast::Parser.new(row.fetch('type')).parse
+          column = row.fetch(config.key('name'))
+          # make symbol keys, if config.symbolize_keys is true,
+          # to be able to cast and serialize properly
+          object[config.key(column)] = begin
+            current = Ast::Parser.new(row.fetch(config.key('type'))).parse
             assign_type(current)
             current
           end

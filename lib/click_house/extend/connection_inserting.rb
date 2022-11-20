@@ -63,9 +63,9 @@ module ClickHouse
 
         case body
         when Hash
-          Response::Factory.exec(execute("INSERT INTO #{table} FORMAT #{format}", body.to_json))
+          Response::Factory.exec(execute("INSERT INTO #{table} FORMAT #{format}", config.json_serializer.dump(body)))
         when Array
-          Response::Factory.exec(execute("INSERT INTO #{table} FORMAT #{format}", body.map(&:to_json).join("\n")))
+          Response::Factory.exec(execute("INSERT INTO #{table} FORMAT #{format}", config.json_serializer.dump_each_row(body)))
         else
           raise ArgumentError, "unknown body class <#{body.class}>"
         end
@@ -77,7 +77,7 @@ module ClickHouse
 
         yield(values) if block_given?
 
-        response = execute("INSERT INTO #{table} (#{columns.join(',')}) FORMAT #{format}", values.map(&:to_json).join("\n"))
+        response = execute("INSERT INTO #{table} (#{columns.join(',')}) FORMAT #{format}", config.json_serializer.dump_each_row(values))
         Response::Factory.exec(response)
       end
     end

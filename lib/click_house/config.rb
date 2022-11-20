@@ -18,18 +18,21 @@ module ClickHouse
       headers: {},
       global_params: {},
       json_parser: ClickHouse::Middleware::ParseJson,
+      json_serializer: ClickHouse::Serializer::JsonSerializer,
+      oj_dump_options: {
+        mode: :compat # to be able to dump improper JSON like {1 => 2}
+      },
       oj_load_options: {
         mode: :custom,
         allow_blank: true,
         bigdecimal_as_decimal: false, # dump BigDecimal as a String
         bigdecimal_load: :bigdecimal, # convert all decimal numbers to BigDecimal
-        empty_string: false,
-        second_precision: 6,
-        time_format: :ruby,
       },
       json_load_options: {
         decimal_class: BigDecimal,
       },
+      # should be after json load options
+      symbolize_keys: false,
     }.freeze
 
     attr_accessor :adapter
@@ -49,6 +52,9 @@ module ClickHouse
     attr_accessor :oj_load_options
     attr_accessor :json_load_options
     attr_accessor :json_parser # response middleware
+    attr_accessor :oj_dump_options
+    attr_accessor :json_serializer # [ClickHouse::Serializer::Base]
+    attr_accessor :symbolize_keys # [NilClass, Boolean]
 
     def initialize(params = {})
       assign(DEFAULTS.merge(params))
@@ -76,6 +82,26 @@ module ClickHouse
 
     def null_logger
       @null_logger ||= Logger.new(IO::NULL)
+    end
+
+    # @param klass [ClickHouse::Serializer::Base]
+    def json_serializer=(klass)
+      @json_serializer = klass.new(self)
+    end
+
+    def symbolize_keys=(value)
+      bool = value ? true : false
+
+      # merge to be able to clone a config
+      # prevent overriding default values
+      self.oj_load_options = oj_load_options.merge(symbol_keys: bool)
+      self.json_load_options = json_load_options.merge(symbolize_names: bool)
+      @symbolize_keys = bool
+    end
+
+    # @param name [Symbol, String]
+    def key(name)
+      symbolize_keys ? name.to_sym : name.to_s
     end
   end
 end

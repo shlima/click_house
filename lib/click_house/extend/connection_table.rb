@@ -10,12 +10,12 @@ module ClickHouse
 
       # @return [ResultSet]
       def describe_table(name)
-        Response::Factory[execute("DESCRIBE TABLE #{name} FORMAT JSON")]
+        Response::Factory.response(execute("DESCRIBE TABLE #{name} FORMAT JSON"), config)
       end
 
       # @return [ResultSet]
       def table_schema(name)
-        Response::Factory[execute("SELECT * FROM #{name} WHERE 1=0 FORMAT JSON")]
+        Response::Factory.response(execute("SELECT * FROM #{name} WHERE 1=0 FORMAT JSON"), config)
       end
 
       # @return [Boolean]
