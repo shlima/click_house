@@ -138,12 +138,15 @@ Select all type-casted result set
 @result = ClickHouse.connection.select_all('SELECT * FROM visits')
 
 # all enumerable methods are delegated like #each, #map, #select etc
-# results of #to_a is type casted
+# results of #to_a is TYPE CASTED
 @result.to_a #=> [{"date"=>#<Date: 2000-01-01>, "id"=>1}]
+
+# raw results (WITHOUT type casting)
+# much faster if selecting a large amount of data
+@result.data #=> [{"date"=>"2000-01-01", "id"=>1}, {"date"=>"2000-01-02", "id"=>2}]
 
 # you can access raw data
 @result.meta #=> [{"name"=>"date", "type"=>"Date"}, {"name"=>"id", "type"=>"UInt32"}]
-@result.data #=> [{"date"=>"2000-01-01", "id"=>1}, {"date"=>"2000-01-02", "id"=>2}]
 @result.statistics #=> {"elapsed"=>0.0002271, "rows_read"=>2, "bytes_read"=>12}
 @result.summary #=> ClickHouse::Response::Summary
 @result.headers #=> {"x-clickhouse-query-id"=>"9bf5f604-31fc-4eff-a4b5-277f2c71d199"}
