@@ -7,6 +7,10 @@ module ClickHouse
         yield(value) unless value.nil?
       end
 
+      def serialize_each(value, *_argv)
+        yield(value) unless value.nil?
+      end
+
       def container?
         true
       end

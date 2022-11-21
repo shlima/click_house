@@ -4,11 +4,11 @@ module ClickHouse
   module Type
     class IPType < BaseType
       def cast(value)
-        IPAddr.new(value) unless value.nil?
+        IPAddr.new(value)
       end
 
       def serialize(value)
-        value.to_s unless value.nil?
+        value.to_s
       end
     end
   end

@@ -6,7 +6,6 @@ RSpec.describe ClickHouse::Type::IPType do
 
     it 'works' do
       expect(subject.cast(String(ip))).to eq(ip)
-      expect(subject.cast(nil)).to eq(nil)
     end
   end
 

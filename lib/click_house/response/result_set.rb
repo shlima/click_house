@@ -113,7 +113,7 @@ module ClickHouse
         return cast_map(stmt, Hash(value)) if stmt.caster.map?
         return cast_tuple(stmt, Array(value)) if stmt.caster.tuple?
 
-        stmt.caster.cast(value, *stmt.arguments.map(&:value))
+        stmt.caster.cast(value, *stmt.argument_values)
       end
 
       # @return [Hash]
@@ -131,8 +131,7 @@ module ClickHouse
       # @param stmt [Ast::Statement]
       def cast_container(stmt, value)
         stmt.caster.cast_each(value) do |item|
-          # TODO: raise an error if multiple arguments
-          cast_type(stmt.arguments.first, item)
+          cast_type(stmt.argument_first!, item)
         end
       end
 
@@ -149,14 +148,13 @@ module ClickHouse
         return serialize_map(stmt, value) if stmt.caster.map?
         return serialize_tuple(stmt, Array(value)) if stmt.caster.tuple?
 
-        stmt.caster.serialize(value, *stmt.arguments.map(&:value))
+        stmt.caster.serialize(value, *stmt.argument_values)
       end
 
       # @param stmt [Ast::Statement]
       def serialize_container(stmt, value)
-        stmt.caster.cast_each(value) do |item|
-          # TODO: raise an error if multiple arguments
-          serialize_type(stmt.arguments.first, item)
+        stmt.caster.serialize_each(value) do |item|
+          serialize_type(stmt.argument_first!, item)
         end
       end
 

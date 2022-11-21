@@ -3,16 +3,18 @@
 module ClickHouse
   module Type
     class DateTimeType < BaseType
+      FORMAT = '%Y-%m-%d %H:%M:%S'
+
       def cast(value, tz = nil)
         if tz
-          Time.find_zone(tz).parse(value)
+          Time.find_zone(tz).strptime(value, FORMAT)
         else
-          Time.parse(value)
+          Time.strptime(value, FORMAT)
         end
       end
 
       def serialize(value, *)
-        value.strftime('%Y-%m-%d %H:%M:%S')
+        value.strftime(FORMAT)
       end
     end
   end

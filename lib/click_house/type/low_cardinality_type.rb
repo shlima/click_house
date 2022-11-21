@@ -4,7 +4,11 @@ module ClickHouse
   module Type
     class LowCardinalityType < BaseType
       def cast_each(value, *_argv)
-        yield(value) unless value.nil?
+        yield(value)
+      end
+
+      def serialize_each(value, *_argv)
+        yield(value)
       end
 
       def container?

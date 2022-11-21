@@ -15,6 +15,7 @@ RSpec.describe ClickHouse::Type::ArrayType do
               e Array(DateTime64(3, 'UTC')),
               f Array(Nullable(DateTime64(3, 'UTC'))),
               g Array(Decimal(10,2)),
+              h Array(String)
            ) ENGINE Memory
         SQL
 
@@ -26,7 +27,8 @@ RSpec.describe ClickHouse::Type::ArrayType do
             array(now()),
             array(now()),
             array(now()),
-            array(5.99)
+            array(5.99),
+            array('foo')
           );
         SQL
       end
@@ -40,6 +42,7 @@ RSpec.describe ClickHouse::Type::ArrayType do
         expect(got.fetch('e').first).to be_a(Time)
         expect(got.fetch('f').first).to be_a(Time)
         expect(got.fetch('g').first).to be_a(BigDecimal)
+        expect(got.fetch('h')).to eq(['foo'])
       end
     end
 
@@ -91,6 +94,7 @@ RSpec.describe ClickHouse::Type::ArrayType do
               b Array(DateTime64(9, 'Europe/Kyiv')),
               c Array(Array(UInt8)),
               d Array(Array(Array(Nullable(UInt8)))),
+              e Array(String),          
            ) ENGINE Memory
       SQL
     end
@@ -100,7 +104,8 @@ RSpec.describe ClickHouse::Type::ArrayType do
         'a' => [true],
         'b' => [Time.find_zone("Europe/Kyiv").now],
         'c' => [[1]],
-        'd' => [[[nil]]]
+        'd' => [[[nil]]],
+        'e' => ['foo']
       }
     end
 
@@ -112,6 +117,7 @@ RSpec.describe ClickHouse::Type::ArrayType do
       expect(got.fetch('b')).to eq(row.fetch('b'))
       expect(got.fetch('c')).to eq(row.fetch('c'))
       expect(got.fetch('d')).to eq(row.fetch('d'))
+      expect(got.fetch('e')).to eq(row.fetch('e'))
     end
   end
 end

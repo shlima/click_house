@@ -6,7 +6,7 @@ RSpec.describe ClickHouse::Type::DateTime64Type do
   before do
     subject.execute <<~SQL
       CREATE TABLE rspec(
-          a DateTime64(9),
+          a DateTime64(0),
           b DateTime64(9, 'Europe/Kyiv'),
           c Nullable(DateTime64(9)),
           d Nullable(DateTime64(9, 'Europe/Kyiv')),
@@ -47,7 +47,7 @@ RSpec.describe ClickHouse::Type::DateTime64Type do
   describe 'serialize' do
     let(:row) do
       {
-        'a' => Time.now,
+        'a' => Time.now.round,
         'b' => Time.find_zone("Europe/Kyiv").now,
         'c' => Time.now,
         'd' => nil,

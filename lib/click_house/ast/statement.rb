@@ -59,6 +59,17 @@ module ClickHouse
         @arguments ||= []
       end
 
+      # @return [Array]
+      # cached argument values to increase the casting perfomance
+      def argument_values
+        @argument_values ||= arguments.map(&:value)
+      end
+
+      def argument_first!
+        # TODO: raise an error if multiple arguments
+        @argument_first ||= arguments.first
+      end
+
       def placeholder
         return @placeholder if defined?(@placeholder)
 
