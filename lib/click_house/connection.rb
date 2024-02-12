@@ -52,6 +52,7 @@ module ClickHouse
       @transport ||= Faraday.new(config.url!) do |conn|
         conn.options.timeout = config.timeout
         conn.options.open_timeout = config.open_timeout
+        conn.options.read_timeout = config.read_timeout
         conn.headers = config.headers
         conn.ssl.verify = config.ssl_verify
 

@@ -51,6 +51,7 @@ ClickHouse.config do |config|
   config.url = 'http://localhost:8123'
   config.timeout = 60
   config.open_timeout = 3
+  config.read_timeout = 50
   config.ssl_verify = false
   # set to true to symbolize keys for SELECT and INSERT statements (type casting)
   config.symbolize_keys = false
@@ -414,6 +415,7 @@ default: &default
   url: http://localhost:8123
   timeout: 60
   open_timeout: 3
+  read_timeout: 50
 
 development:
   database: ecliptic_development

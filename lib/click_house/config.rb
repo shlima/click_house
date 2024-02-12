@@ -14,6 +14,7 @@ module ClickHouse
       password: nil,
       timeout: nil,
       open_timeout: nil,
+      read_timeout: nil,
       ssl_verify: false,
       headers: {},
       global_params: {},
@@ -46,6 +47,7 @@ module ClickHouse
     attr_accessor :password
     attr_accessor :timeout
     attr_accessor :open_timeout
+    attr_accessor :read_timeout
     attr_accessor :ssl_verify
     attr_accessor :headers
     attr_accessor :global_params
