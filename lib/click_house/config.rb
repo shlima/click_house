@@ -4,6 +4,7 @@ module ClickHouse
   class Config
     DEFAULTS = {
       adapter: Faraday.default_adapter,
+      adapter_options: [],
       url: nil,
       scheme: 'http',
       host: 'localhost',
@@ -37,6 +38,7 @@ module ClickHouse
     }.freeze
 
     attr_accessor :adapter
+    attr_accessor :adapter_options
     attr_accessor :logger
     attr_accessor :scheme
     attr_accessor :host
