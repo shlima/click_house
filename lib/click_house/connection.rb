@@ -52,6 +52,7 @@ module ClickHouse
       @transport ||= Faraday.new(config.url!) do |conn|
         conn.options.timeout = config.timeout
         conn.options.open_timeout = config.open_timeout
+        conn.options.read_timeout = config.read_timeout
         conn.headers = config.headers
         conn.ssl.verify = config.ssl_verify
 
@@ -68,7 +69,7 @@ module ClickHouse
         conn.response Middleware::SummaryMiddleware, options: { config: config } # should be after logger
         conn.response config.json_parser, content_type: %r{application/json}, options: { config: config }
         conn.response Middleware::ParseCsv, content_type: %r{text/csv}, options: { config: config }
-        conn.adapter config.adapter
+        conn.adapter config.adapter, *config.adapter_options
       end
     end
     # rubocop:enable Metrics/AbcSize

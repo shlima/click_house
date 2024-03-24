@@ -3,14 +3,24 @@
 module ClickHouse
   module Response
     class Factory
-      KEY_META = 'meta'
-      KEY_DATA = 'data'
+      KEY_META = "meta"
+      KEY_DATA = "data"
 
       # @return [ResultSet]
       # @params faraday [Faraday::Response]
       # @params config [Config]
       def self.response(faraday, config)
         body = faraday.body
+
+        # Clickhouse can return strings containing JSON sometimes, where the
+        # content-type is text/plain but the body is actually JSON
+        if faraday.headers["content-type"].start_with?("text/plain") && body.is_a?(String)
+          begin
+            parsed_body = JSON.parse(body)
+            body = parsed_body if parsed_body.is_a?(Hash)
+          rescue JSON::ParserError
+          end
+        end
 
         # wrap to be able to use connection#select_one, connection#select_value
         # with other formats like binary
