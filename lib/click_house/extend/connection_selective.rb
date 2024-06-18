@@ -5,12 +5,12 @@ module ClickHouse
     module ConnectionSelective
       # @return [ResultSet]
       def select_all(sql)
-        response = get(body: sql, query: { default_format: 'JSON' })
+        response = get(body: sql, query: query_defaults)
         Response::Factory.response(response, config)
       end
 
       def select_value(sql)
-        response = get(body: sql, query: { default_format: 'JSON' })
+        response = get(body: sql, query: query_defaults)
         got = Response::Factory.response(response, config).first
 
         case got
@@ -24,8 +24,12 @@ module ClickHouse
       end
 
       def select_one(sql)
-        response = get(body: sql, query: { default_format: 'JSON' })
+        response = get(body: sql, query: query_defaults)
         Response::Factory.response(response, config).first
+      end
+
+      def query_defaults
+        config.global_params.merge({default_format: 'JSON'})
       end
     end
   end
