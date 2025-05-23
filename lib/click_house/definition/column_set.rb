@@ -22,10 +22,10 @@ module ClickHouse
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
           def #{method_name}(*definition)
             name = definition[0]
-            extentions = []
+            extensions = []
             options = {}
-            extensions = Array(definition[1..-1]).each do |el|
-              el.is_a?(Hash) ? options.merge!(el) : extentions.push(el)
+            Array(definition[1..-1]).each do |el|
+              el.is_a?(Hash) ? options.merge!(el) : extensions.push(el)
             end
 
             columns << Column.new(type: "#{type}", name: name, extensions: extensions, **options)
