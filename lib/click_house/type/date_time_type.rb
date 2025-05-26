@@ -13,8 +13,12 @@ module ClickHouse
         end
       end
 
-      def serialize(value, *)
-        value.strftime(FORMAT)
+      def serialize(value, tz = nil)
+        if tz
+          value.in_time_zone(Time.find_zone(tz)).strftime(FORMAT)
+        else
+          value.strftime(FORMAT)
+        end
       end
     end
   end

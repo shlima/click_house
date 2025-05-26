@@ -32,8 +32,12 @@ module ClickHouse
         end
       end
 
-      def serialize(value, precision = 3, _tz = nil)
-        value.strftime(SERIALIZE_FORMATS.fetch(precision))
+      def serialize(value, precision = 3, tz = nil)
+        if tz
+          value.in_time_zone(Time.find_zone(tz)).strftime(SERIALIZE_FORMATS.fetch(precision))
+        else
+          value.strftime(SERIALIZE_FORMATS.fetch(precision))
+        end
       end
     end
   end

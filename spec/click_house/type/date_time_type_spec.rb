@@ -7,6 +7,16 @@ RSpec.describe ClickHouse::Type::DateTimeType do
     it 'works' do
       expect(subject.serialize(time)).to eq('2019-01-01 09:05:06')
     end
+
+    context 'when zone exists' do
+      let(:time) do
+        Time.new(2019, 1, 1, 9, 5, 6, Time.find_zone('UTC'))
+      end
+
+      it 'works' do
+        expect(subject.serialize(time, 'Europe/Kyiv')).to eq('2019-01-01 11:05:06')
+      end
+    end
   end
 
   describe '#cast' do
