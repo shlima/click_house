@@ -35,7 +35,7 @@ RSpec.describe ClickHouse::Type::BooleanType do
       expect(got.fetch('a')).to be_a(TrueClass)
       expect(got.fetch('b')).to be_a(FalseClass)
       expect(got.fetch('c')).to be_a(TrueClass)
-      expect(got.fetch('b')).to be_a(FalseClass)
+      expect(got.fetch('d')).to be_a(FalseClass)
       expect(got.fetch('e')).to be_a(NilClass)
     end
   end
@@ -58,7 +58,7 @@ RSpec.describe ClickHouse::Type::BooleanType do
       expect(got.fetch('a')).to be_a(TrueClass)
       expect(got.fetch('b')).to be_a(FalseClass)
       expect(got.fetch('c')).to be_a(TrueClass)
-      expect(got.fetch('b')).to be_a(FalseClass)
+      expect(got.fetch('d')).to be_a(FalseClass)
       expect(got.fetch('e')).to be_a(NilClass)
     end
   end
