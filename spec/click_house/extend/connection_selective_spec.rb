@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ClickHouse::Extend::ConnectionSelective do
   subject do
     ClickHouse.connection
@@ -21,6 +23,12 @@ RSpec.describe ClickHouse::Extend::ConnectionSelective do
         expect(subject.select_value('SELECT 1, 2, 3, 4, 5')).to eq(1)
       end
     end
+
+    context 'when invalid query' do
+      it 'raises DbException for unknown function' do
+        expect { subject.select_value('SELECT unknownFunction()') }.to raise_error(ClickHouse::DbException)
+      end
+    end
   end
 
   describe '#select_one' do
@@ -33,6 +41,12 @@ RSpec.describe ClickHouse::Extend::ConnectionSelective do
     context 'when not exists' do
       it 'works' do
         expect(subject.select_one('SELECT NULL')).to eq({ 'NULL' => nil })
+      end
+    end
+
+    context 'when invalid query' do
+      it 'raises DbException for unknown function' do
+        expect { subject.select_one('SELECT unknownFunction()') }.to raise_error(ClickHouse::DbException)
       end
     end
   end
@@ -64,6 +78,20 @@ RSpec.describe ClickHouse::Extend::ConnectionSelective do
 
       it 'works' do
         expect(subject.select_all('SELECT * FROM rspec').to_a).to match_array(expectation)
+      end
+    end
+
+    context 'when invalid query' do
+      it 'raises DbException for unknown function' do
+        expect { subject.select_all('SELECT unknownFunction()') }.to raise_error(ClickHouse::DbException)
+      end
+
+      it 'raises DbException for non-existent table' do
+        expect { subject.select_all('SELECT * FROM nonexistent_table_xyz') }.to raise_error(ClickHouse::DbException)
+      end
+
+      it 'raises DbException with error message for invalid syntax' do
+        expect { subject.select_all('SELECT * FROM') }.to raise_error(ClickHouse::DbException, /Exception/)
       end
     end
   end

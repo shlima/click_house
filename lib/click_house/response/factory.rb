@@ -12,6 +12,12 @@ module ClickHouse
       def self.response(faraday, config)
         body = faraday.body
 
+        # Check for exception in response body (ClickHouse may return errors with HTTP 200)
+        # This handles cases where the RaiseError middleware doesn't catch the error
+        if body.is_a?(Hash) && body.key?('exception')
+          raise DbException, body['exception']
+        end
+
         # wrap to be able to use connection#select_one, connection#select_value
         # with other formats like binary
         return raw(faraday, config) unless body.is_a?(Hash)
