@@ -52,7 +52,7 @@ module ClickHouse
         if env.method == GET
           env.request_body
         else
-          String(CGI.parse(env.url.query.to_s).dig('query', 0) || '[NO QUERY]').chomp
+          String(URI.decode_www_form(env.url.query.to_s).assoc('query')&.last || '[NO QUERY]').chomp
         end
       end
 
